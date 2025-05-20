@@ -19,6 +19,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/vite": "^4.0.0",
 		"@types/bcrypt": "^5.0.2",
+		"@types/matter-js": "^0.19.8",
 		"@types/node": "^22.13.10",
 		"@types/pg": "^8.11.11",
 		"prettier": "^3.4.2",
@@ -35,6 +36,7 @@
 		"@auth/sveltekit": "^1.8.0",
 		"bcrypt": "^5.1.1",
 		"dotenv": "^16.4.7",
+		"matter-js": "^0.20.0",
 		"pg": "^8.14.1"
 	}
 }

@@ -160,7 +160,7 @@
 <h2>Dealer</h2>
 <div class="cards">
 	{#each dealer as card, i (card.value + card.suit + i)}
-		<div class="card-container" in:fly={{ y: 40, duration: 300 }} out:fade>
+		<div class="card-container" in:fly={{ y: 40, duration: 300 }}>
 			{#if i === 0}
 				<div class="flip-card {dealerHidden ? '' : 'flipped'}">
 					<div class="flip-front">
@@ -186,7 +186,7 @@
 	<div class="hand {i === currentHandIndex ? 'active' : ''} {results[i]}" style="width: fit-content;">
 		<div class="cards">
 			{#each hand as card}
-				<div class="card-container" in:fly={{ y: 40, duration: 300 }} out:fade>
+				<div class="card-container" in:fly={{ y: 40, duration: 300 }}>
 					<span class={`pcard pcard-${formatCardClass(card)}`}></span>
 				</div>
 			{/each}

@@ -43,7 +43,7 @@
 		spinning = true;
 
 		try {
-			const res = await fetch('/roulette/spin');
+			const res = await fetch('/games/roulette/spin');
 			const data = await res.json();
 			const winningNumber: number = data.number;
 

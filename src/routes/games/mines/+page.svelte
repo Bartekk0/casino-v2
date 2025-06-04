@@ -13,7 +13,7 @@
 	async function startGame() {
 		console.log('sztart');
 		waitStart = true;
-		const res = await fetch(`/mines/place?bombs=${bombCount}`);
+		const res = await fetch(`/games/mines/place?bombs=${bombCount}`);
 		const data = await res.json();
 		waitStart = false;
 		console.log('poczekalem');

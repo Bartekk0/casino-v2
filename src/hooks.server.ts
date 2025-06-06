@@ -1,3 +1,3 @@
-export { handle } from './routes/auth';
+import { auth } from './lib/server/auth';
 
-console.log('hooks.server.ts');
+export const handle = auth.handle;

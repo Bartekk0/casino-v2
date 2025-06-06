@@ -1,9 +1,3 @@
-import { SvelteKitAuth } from '@auth/sveltekit';
-import GitHub from '@auth/sveltekit/providers/github';
-import Credentials from '@auth/sveltekit/providers/credentials';
-// import { saltAndHashPassword } from '@/utils/password';
-import { saltAndHashPassword } from '../utils/password';
-import PostgresAdapter from '@auth/pg-adapter';
 // import pkg from 'pg';
 // const { Pool } = pkg;
 // import dotenv from 'dotenv';
@@ -22,7 +16,6 @@ import PostgresAdapter from '@auth/pg-adapter';
 // });
 
 import { pool } from '../utils/db';
-import { comparePasswords } from "../utils/password"
 
 export const initDB = async () => {
 	const client = await pool.connect();
@@ -97,64 +90,5 @@ export const initDB = async () => {
 // };
 
 
-export async function getUserByEmail(email: string) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(
-      /* sql */ `
-      SELECT * FROM users WHERE email = $1;
-    `,
-      [email]
-    );
-    return result.rows[0];
-  } finally {
-    client.release();
-  }
-}
 
-export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
-	const authOptions = {
-		adapter: PostgresAdapter(pool),
-		providers: [
-			// GitHub({
-			// 	clientId: process.env.AUTH_GITHUB_ID ?? '',
-			// 	clientSecret: process.env.AUTH_GITHUB_SECRET ?? ''
-			// }),
-			Credentials({
-				// You can specify which fields should be submitted, by adding keys to the `credentials` object.
-				// e.g. domain, username, password, 2FA token, etc.
-				credentials: {
-					email: { label: "email" },
-					password: { label: "password", type: "password" }
-				},
-				authorize: async (credentials) => {
-					if (
-						!credentials ||
-						typeof credentials.email !== 'string' ||
-						typeof credentials.password !== 'string'
-					) {
-						throw new Error('Invalid credentials');
-					}
 
-					// Pobierz użytkownika po emailu (bez sprawdzania hasła w zapytaniu)
-					const user = await getUserByEmail(credentials.email);
-					if (!user) {
-						throw new Error('Invalid credentials');
-					}
-
-					// Porównaj podane hasło z zahashowanym w bazie
-					const isValidPassword = await comparePasswords(credentials.password, user.password);
-					if (!isValidPassword) {
-						throw new Error('Invalid credentials');
-					}
-
-					// Zwróć usera, jeśli wszystko ok
-					return user;
-				}
-			})
-		],
-		secret: process.env.AUTH_SECRET,
-		trustHost: true
-	};
-	return authOptions;
-});

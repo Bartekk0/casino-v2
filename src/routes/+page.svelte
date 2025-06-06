@@ -1,5 +1,5 @@
 <script lang="ts">
-	// import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 	let email = '';
 	let password = '';
 	let error = '';
@@ -37,16 +37,14 @@
 	</p>
 	<div class="actions"> -->
 
-
-		<!-- <div class="wrapper-form">
+	<!-- <div class="wrapper-form">
 			<button on:click={() => signIn('github')}>Sign In with GitHub</button>
 		</div>
 		<div class="wrapper-form">
 			<button on:click={() => signIn('discord')}>Sign In with Discord</button>
 		</div> -->
 
-
-		<!-- <div class="wrapper-form">
+	<!-- <div class="wrapper-form">
 			<div class="input-wrapper">
 				<label for="password">Password</label>
 				<input bind:value={password} type="password" id="password" name="password" required />
@@ -67,6 +65,8 @@
 		<input type="password" bind:value={password} placeholder="Hasło" required />
 		<button type="submit">Zarejestruj się</button>
 	</form>
+
+	<button on:click={() => signIn('github')}>Zaloguj przez GitHub</button>
 
 	{#if error}<p style="color: red">{error}</p>{/if}
 	{#if success}<p style="color: green">{success}</p>{/if}

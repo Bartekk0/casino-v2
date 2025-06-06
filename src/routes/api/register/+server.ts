@@ -1,39 +1,60 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { pool } from '../../../utils/db';
-import { saltAndHashPassword } from '../../../utils/password'; // dopasuj ścieżkę
+import { saltAndHashPassword } from '../../../utils/password';
 
 export const POST: RequestHandler = async ({ request }) => {
+	const client = await pool.connect();
+
 	try {
 		const { email, password } = await request.json();
 
-		// prosta walidacja
 		if (!email || !password) {
 			return new Response(JSON.stringify({ error: 'Email i hasło są wymagane' }), { status: 400 });
 		}
 
-		const client = await pool.connect();
+		await client.query('BEGIN');
 
-		// sprawdź czy istnieje
 		const existing = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 		if (existing.rows.length > 0) {
-			client.release();
+			await client.query('ROLLBACK');
 			return new Response(JSON.stringify({ error: 'Użytkownik już istnieje' }), { status: 400 });
 		}
 
-		// zhashuj hasło
 		const hashedPassword = await saltAndHashPassword(password);
 
-		// wstaw nowego użytkownika z zahashowanym hasłem
-		await client.query(
-			'INSERT INTO users (email, password) VALUES ($1, $2)',
+		const insertResult = await client.query(
+			'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id',
 			[email, hashedPassword]
 		);
+		const userId = insertResult.rows[0].id;
 
-		client.release();
+		await client.query(
+			`INSERT INTO accounts (
+				"userId",
+				type,
+				provider,
+				"providerAccountId",
+				refresh_token,
+				access_token,
+				expires_at,
+				id_token,
+				scope,
+				session_state,
+				token_type
+			) VALUES (
+				$1, 'credentials', 'credentials', $2, null, null, null, null, null, null, null
+			)`,
+			[userId, email]
+		);
+
+		await client.query('COMMIT');
 
 		return new Response(JSON.stringify({ message: 'Zarejestrowano pomyślnie' }), { status: 201 });
 	} catch (err) {
-		console.error(err);
-		return new Response(JSON.stringify({ error: 'Coś poszło nie tak' }), { status: 500 });
+		await client.query('ROLLBACK');
+		console.error('Błąd przy rejestracji:', err);
+		return new Response(JSON.stringify({ error: 'Coś poszło nie tak przy rejestracji' }), { status: 500 });
+	} finally {
+		client.release();
 	}
 };

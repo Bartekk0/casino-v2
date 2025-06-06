@@ -4,22 +4,25 @@ import Credentials from '@auth/sveltekit/providers/credentials';
 // import { saltAndHashPassword } from '@/utils/password';
 import { saltAndHashPassword } from '../utils/password';
 import PostgresAdapter from '@auth/pg-adapter';
-import pkg from 'pg';
-const { Pool } = pkg;
-import dotenv from 'dotenv';
-dotenv.config();
-// import { Pool } from 'pg';
+// import pkg from 'pg';
+// const { Pool } = pkg;
+// import dotenv from 'dotenv';
+// dotenv.config();
+// // import { Pool } from 'pg';
 
-const pool = new Pool({
-	host: process.env.DATABASE_HOST,
-	user: process.env.DATABASE_USER,
-	password: '' + process.env.DATABASE_PASSWORD,
-	database: process.env.DATABASE_NAME,
-	port: parseInt(process.env.DATABASE_PORT ?? '2665'),
-	max: 20,
-	idleTimeoutMillis: 30000,
-	connectionTimeoutMillis: 2000
-});
+// const pool = new Pool({
+// 	host: process.env.DATABASE_HOST,
+// 	user: process.env.DATABASE_USER,
+// 	password: '' + process.env.DATABASE_PASSWORD,
+// 	database: process.env.DATABASE_NAME,
+// 	port: parseInt(process.env.DATABASE_PORT ?? '2665'),
+// 	max: 20,
+// 	idleTimeoutMillis: 30000,
+// 	connectionTimeoutMillis: 2000
+// });
+
+import { pool } from '../utils/db';
+import { comparePasswords } from "../utils/password"
 
 export const initDB = async () => {
 	const client = await pool.connect();
@@ -77,18 +80,37 @@ export const initDB = async () => {
 	client.release();
 };
 
-const getUserFromDb = async (email: string, password: string) => {
-	const client = await pool.connect();
-	const result = await client.query(
-		/* sql */ `
-	SELECT * FROM users WHERE email = $1 AND password = $2;
-	`,
-		[email, password]
-	);
+// const getUserFromDb = async (email: string, password: string) => {
+// 	const client = await pool.connect();
+// 	const result = await client.query(
+// 		/* sql */ `
+// 	SELECT * FROM users WHERE email = $1 AND password = $2;
+// 	`,
+// 		[email, password]
+// 	);
 
-	client.release();
-	return result.rows[0];
-};
+// 	console.log('Szukam użytkownika:', email, password);
+// 	console.log('Wynik z bazy:', result.rows[0]);
+
+// 	client.release();
+// 	return result.rows[0];
+// };
+
+
+export async function getUserByEmail(email: string) {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      /* sql */ `
+      SELECT * FROM users WHERE email = $1;
+    `,
+      [email]
+    );
+    return result.rows[0];
+  } finally {
+    client.release();
+  }
+}
 
 export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
 	const authOptions = {
@@ -102,26 +124,31 @@ export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
 				// You can specify which fields should be submitted, by adding keys to the `credentials` object.
 				// e.g. domain, username, password, 2FA token, etc.
 				credentials: {
-					email: {},
-					password: {}
+					email: { label: "email" },
+					password: { label: "password", type: "password" }
 				},
 				authorize: async (credentials) => {
-					let user = null;
-
-					// logic to salt and hash password
-					const pwHash = saltAndHashPassword(credentials.password as string);
-
-					// logic to verify if user exists
-					user = await getUserFromDb(credentials.email, pwHash);
-					console.log('user', user);
-
-					if (!user) {
-						// No user found, so this is their first attempt to login
-						// Optionally, this is also the place you could do a user registration
-						throw new Error('Invalid credentials.');
+					if (
+						!credentials ||
+						typeof credentials.email !== 'string' ||
+						typeof credentials.password !== 'string'
+					) {
+						throw new Error('Invalid credentials');
 					}
 
-					// return JSON object with the user data
+					// Pobierz użytkownika po emailu (bez sprawdzania hasła w zapytaniu)
+					const user = await getUserByEmail(credentials.email);
+					if (!user) {
+						throw new Error('Invalid credentials');
+					}
+
+					// Porównaj podane hasło z zahashowanym w bazie
+					const isValidPassword = await comparePasswords(credentials.password, user.password);
+					if (!isValidPassword) {
+						throw new Error('Invalid credentials');
+					}
+
+					// Zwróć usera, jeśli wszystko ok
 					return user;
 				}
 			})

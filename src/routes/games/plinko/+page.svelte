@@ -4,7 +4,7 @@
 
 	let engine: Matter.Engine;
 	let render: Matter.Render;
-	let points = 25;
+	let credits = 25;
 	let multiplier = 1;
 
 	const HEIGHT = 600,
@@ -18,23 +18,23 @@
 		BOXES_OPTIONS = [
 			{
 				color: '#1e3a5c',
-				points: 10
+				credits: 10
 			},
 			{
 				color: '#60a5fa',
-				points: 7
+				credits: 7
 			},
 			{
 				color: '#38bdf8',
-				points: 5
+				credits: 5
 			},
 			{
 				color: '#7dd3fc',
-				points: 3
+				credits: 3
 			},
 			{
 				color: '#bae6fd',
-				points: 0
+				credits: 0
 			}
 		].reverse(),
 		MULITIPLIERS = [1, 2, 3, 4, 5],
@@ -115,10 +115,10 @@
 		const start = WIDTH / 2 - PEG_SPACING;
 		const stop = WIDTH / 2 + PEG_SPACING;
 		document.querySelector('#drop-ball-button')?.addEventListener('click', () => {
-			if (points < DEFAULT_BALL_COST * multiplier) {
+			if (credits < DEFAULT_BALL_COST * multiplier) {
 				return;
 			}
-			points -= DEFAULT_BALL_COST * multiplier;
+			credits -= DEFAULT_BALL_COST * multiplier;
 			const randomX = Math.random() * (stop - start) + start;
 			const ball = Matter.Bodies.circle(randomX, 50, BALL_RADIUS, {
 				restitution: 0.8,
@@ -146,9 +146,9 @@
 					const ball = isBox === bodyA ? bodyB : bodyA;
 					const ballMultiplier = Number(ball.label.split('-')[1]);
 					Matter.Body.setStatic(ball, true);
-					points +=
+					credits +=
 						BOXES_OPTIONS[boxNumber > 4 ? 2 * BOXES_OPTIONS.length - boxNumber - 1 : boxNumber]
-							.points * ballMultiplier;
+							.credits * ballMultiplier;
 					setTimeout(() => {
 						Matter.World.remove(engine.world, ball);
 						isBox.render.fillStyle =
@@ -173,15 +173,15 @@
 	class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-b from-[#0a0c1a] to-[#1e3a5c] font-sans"
 >
 	<h2 class="text-4xl font-bold text-white drop-shadow-md">Plinko</h2>
-	<p class="mt-4 mb-2 text-center text-lg text-white">Your points: {points}</p>
+	<p class="mt-4 mb-2 text-center text-lg text-white">Your credits: {credits}</p>
 	<p class="mb-4 text-center text-lg text-white">Current multiplier: {multiplier}x</p>
 
 	<p class="mb-2 text-center text-lg text-white">
-		Ball cost: {DEFAULT_BALL_COST * multiplier} points
+		Ball cost: {DEFAULT_BALL_COST * multiplier} credits
 	</p>
 	<div class="flex gap-4">
 		<button class="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-			>Buy more points</button
+			>Buy more credits</button
 		>
 		<button class="rounded bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
 			>Cash Out</button
@@ -196,7 +196,7 @@
 						style="background: {box.color};"
 					>
 						<span class="text-xs font-bold text-black drop-shadow">
-							{box.points * multiplier} pts
+							{box.credits * multiplier} pts
 						</span>
 					</div>
 				</div>

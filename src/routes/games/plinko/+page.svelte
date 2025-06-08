@@ -1,50 +1,49 @@
 <script lang="ts">
 	import Matter from 'matter-js';
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let engine: Matter.Engine;
 	let render: Matter.Render;
+	let points = 25;
+	let multiplier = 1;
 
 	const HEIGHT = 600,
 		WIDTH = 700,
 		BALL_RADIUS = 10,
 		PEG_RADIUS = 7,
 		WALL_WIDTH = 20,
-		GROUND_HEIGHT = WALL_WIDTH,
 		PEG_SPACING = 60,
 		PEG_ROWS = 8,
 		PEG_COLS = 10,
-		COLORS = ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f', '#9b59b6'],
+		COLORS = ['#831843', '#db2777', '#f472b6', '#f9a8d4', '#fce7f3'],
 		BOXES_OPTIONS = [
 			{
-				color: '#ff4e50', // red-orange
+				color: '#1e3a5c',
 				points: 10
 			},
 			{
-				color: '#fc913a', // orange
-				points: 8
+				color: '#60a5fa',
+				points: 7
 			},
 			{
-				color: '#f9d423', // yellow
-				points: 6
+				color: '#38bdf8',
+				points: 5
 			},
 			{
-				color: '#eae374', // light yellow
-				points: 4
+				color: '#7dd3fc',
+				points: 3
 			},
 			{
-				color: '#e1f5c4', // pale green
-				points: 2
+				color: '#bae6fd',
+				points: 0
 			}
-		].reverse(); // Reverse the order for bottom boxes
+		].reverse(),
+		MULITIPLIERS = [1, 2, 3, 4, 5],
+		DEFAULT_BALL_COST = 5;
+
 	onMount(() => {
-		// Create an engine
 		engine = Matter.Engine.create();
-
-		// Enable gravity
 		engine.gravity.y = 1;
-
-		// Create a renderer
 		render = Matter.Render.create({
 			element: document.getElementById('plinko-container') || document.body,
 			engine: engine,
@@ -52,25 +51,15 @@
 				width: WIDTH,
 				height: HEIGHT + WIDTH / 20,
 				wireframes: false,
-
-				// background: '#6a8c5a'
-				background: '#ecf0f1'
+				background: '#0a0c1a'
 			}
 		});
-
-		// Create the ground
 
 		const boxes = [];
 		const boxWidth = WIDTH / 10;
 		for (let i = 0; i < 10; i++) {
 			const x = boxWidth / 2 + i * boxWidth;
 			const y = HEIGHT - boxWidth / 4;
-			console.log(
-				i >= BOXES_OPTIONS.length,
-				BOXES_OPTIONS.length + (BOXES_OPTIONS.length - i) - 1,
-				i
-			);
-
 			const box = Matter.Bodies.rectangle(x, HEIGHT + boxWidth / 4, boxWidth, boxWidth / 2, {
 				isStatic: true,
 				render: {
@@ -85,7 +74,6 @@
 		}
 		Matter.World.add(engine.world, boxes);
 
-		// Create pegs
 		const pegs = [];
 		for (let row = 0; row < PEG_ROWS; row++) {
 			const totalWidth = row * PEG_SPACING;
@@ -104,7 +92,10 @@
 		}
 
 		const leftWall = Matter.Bodies.rectangle(-WALL_WIDTH / 2, HEIGHT / 2, WALL_WIDTH, HEIGHT, {
-			isStatic: true
+			isStatic: true,
+			render: {
+				strokeStyle: 'transparent'
+			}
 		});
 		const rightWall = Matter.Bodies.rectangle(
 			WIDTH + WALL_WIDTH / 2,
@@ -112,65 +103,36 @@
 			WALL_WIDTH,
 			HEIGHT,
 			{
-				isStatic: true
+				isStatic: true,
+				render: {
+					strokeStyle: 'transparent'
+				}
 			}
 		);
 
 		Matter.World.add(engine.world, [leftWall, rightWall, ...pegs]);
-		// ground,
-		// Add boxes at the bottom for the ball to fall into
-		// const boxes = [];
-		// for (let i = 0; i < 10; i++) {
-		// 	const x = 80 + i * 70; // Position boxes evenly across the bottom
-		// 	const box = Matter.Bodies.rectangle(x, 550, 60, 20, { isStatic: true });
-		// 	boxes.push(box);
-		// }
-		// Matter.World.add(engine.world, boxes);
-
-		// Replace Matter.Engine.run with Matter.Runner.run to ensure the engine updates correctly
 		const runner = Matter.Runner.create();
 		Matter.Runner.run(runner, engine);
-
-		// Run the renderer
 		Matter.Render.run(render);
-
-		// Add a click event listener to the canvas
 		const start = WIDTH / 2 - PEG_SPACING;
 		const stop = WIDTH / 2 + PEG_SPACING;
-		// const ball1 = Matter.Bodies.circle(start, 50, 10, { restitution: 0.8, isStatic: true });
-		// const ball2 = Matter.Bodies.circle(stop, 50, 10, { restitution: 0.8, isStatic: true });
-		// Matter.World.add(engine.world, [ball1, ball2]);
-		render.canvas.addEventListener('click', () => {
+		document.querySelector('#drop-ball-button')?.addEventListener('click', () => {
+			if (points < DEFAULT_BALL_COST * multiplier) {
+				return;
+			}
+			points -= DEFAULT_BALL_COST * multiplier;
 			const randomX = Math.random() * (stop - start) + start;
 			const ball = Matter.Bodies.circle(randomX, 50, BALL_RADIUS, {
 				restitution: 0.8,
-				render: { fillStyle: COLORS[Math.random() * COLORS.length] }
-			}); // Smaller ball with radius 10
+				render: { fillStyle: COLORS[Math.floor(Math.random() * COLORS.length)] },
+				label: 'ball-' + multiplier
+			});
 			Matter.World.add(engine.world, ball);
 		});
-
-		const checkCollision = (
-			event: Matter.IEventCollision<Matter.Engine>,
-			label1: string,
-			label2: string
-		) => {
-			const pairs = event.pairs;
-			for (let i = 0; i < pairs.length; i++) {
-				const pair = pairs[i];
-				if (
-					(pair.bodyA.label === label1 && pair.bodyB.label === label2) ||
-					(pair.bodyA.label === label2 && pair.bodyB.label === label1)
-				) {
-					return true;
-				}
-			}
-			return false;
-		};
 
 		Matter.Events.on(engine, 'collisionStart', (event) => {
 			event.pairs.forEach((pair) => {
 				const { bodyA, bodyB } = pair;
-				// Check if one body is a box and the other is a ball (radius 10)
 				const isBox = bodyA.label.startsWith('box-')
 					? bodyA
 					: bodyB.label.startsWith('box-')
@@ -181,12 +143,22 @@
 					(bodyB.circleRadius === 10 && !bodyB.isStatic);
 
 				if (isBox && isBall) {
-					const boxNumber = isBox.label.split('-')[1];
-					console.log('Ball touched box number:', boxNumber);
+					isBox.render.fillStyle = '#00a63e';
+					const boxNumber = Number(isBox.label.split('-')[1]);
 					const ball = isBox === bodyA ? bodyB : bodyA;
+					const ballMultiplier = Number(ball.label.split('-')[1]);
 					Matter.Body.setStatic(ball, true);
+					points +=
+						BOXES_OPTIONS[boxNumber > 4 ? 2 * BOXES_OPTIONS.length - boxNumber - 1 : boxNumber]
+							.points * ballMultiplier;
 					setTimeout(() => {
 						Matter.World.remove(engine.world, ball);
+						isBox.render.fillStyle =
+							BOXES_OPTIONS[
+								Number(isBox.label.split('-')[1]) >= BOXES_OPTIONS.length
+									? 2 * BOXES_OPTIONS.length - Number(isBox.label.split('-')[1]) - 1
+									: Number(isBox.label.split('-')[1])
+							].color;
 					}, 100);
 				}
 			});
@@ -197,13 +169,68 @@
 			Matter.Engine.clear(engine);
 		};
 	});
-
-	// onDestroy(() => {
-	// 	Matter.Render.stop(render);
-	// 	Matter.Engine.clear(engine);
-	// });
 </script>
 
-<main class="flex h-screen w-full items-center justify-center bg-gray-100">
-	<div id="plinko-container"></div>
+<main
+	class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-b from-[#0a0c1a] to-[#1e3a5c] font-sans"
+>
+	<h2 class="text-4xl font-bold text-white drop-shadow-md">Plinko</h2>
+	<p class="mt-4 mb-2 text-center text-lg text-white">Your points: {points}</p>
+	<p class="mb-4 text-center text-lg text-white">Current multiplier: {multiplier}x</p>
+
+	<p class="mb-2 text-center text-lg text-white">
+		Ball cost: {DEFAULT_BALL_COST * multiplier} points
+	</p>
+	<div class="flex gap-4">
+		<button class="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+			>Buy more points</button
+		>
+		<button class="rounded bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
+			>Cash Out</button
+		>
+	</div>
+	<div class="mt-6 flex flex-row items-center gap-4">
+		<div class="flex flex-col gap-2">
+			{#each BOXES_OPTIONS as box, i}
+				<div class="flex w-16 flex-col items-center">
+					<div
+						class="flex h-6 w-full items-center justify-center rounded-md"
+						style="background: {box.color};"
+					>
+						<span class="text-xs font-bold text-black drop-shadow">
+							{box.points * multiplier} pts
+						</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+		<div
+			id="plinko-container"
+			class="overflow-hidden rounded-md border-2 border-white shadow-lg"
+		></div>
+		<div class="mt-4 flex flex-col gap-2">
+			{#each MULITIPLIERS as m}
+				<button
+					class="flex w-16 cursor-pointer flex-col items-center"
+					on:click={() => (multiplier = m)}
+				>
+					<div
+						class="flex h-6 w-full items-center justify-center rounded-md text-xs font-bold drop-shadow"
+						class:bg-green-500={multiplier === m}
+						class:text-black={multiplier !== m}
+						class:bg-green-800={multiplier !== m}
+						class:text-white={multiplier === m}
+					>
+						{m}x
+					</div>
+				</button>
+			{/each}
+		</div>
+	</div>
+	<button
+		id="drop-ball-button"
+		class="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-500"
+	>
+		Drop a ball
+	</button>
 </main>

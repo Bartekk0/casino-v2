@@ -14,7 +14,6 @@
 		WALL_WIDTH = 20,
 		PEG_SPACING = 60,
 		PEG_ROWS = 8,
-		PEG_COLS = 10,
 		COLORS = ['#831843', '#db2777', '#f472b6', '#f9a8d4', '#fce7f3'],
 		BOXES_OPTIONS = [
 			{
@@ -59,7 +58,6 @@
 		const boxWidth = WIDTH / 10;
 		for (let i = 0; i < 10; i++) {
 			const x = boxWidth / 2 + i * boxWidth;
-			const y = HEIGHT - boxWidth / 4;
 			const box = Matter.Bodies.rectangle(x, HEIGHT + boxWidth / 4, boxWidth, boxWidth / 2, {
 				isStatic: true,
 				render: {

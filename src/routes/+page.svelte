@@ -4,19 +4,21 @@
 	let email = '';
 </script>
 
-<nav>
-	<p>
-		These actions are all using the methods exported from
-		<code>@auth/sveltekit/client</code>
-	</p>
-	<div class="actions">
-		<!-- <div class="wrapper-form">
+<nav class="flex items-center justify-center">
+	<h1
+		style="font-family: 'Rye', serif; background: linear-gradient(90deg, #007cf0, #ff1b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;  font-size: 400px"
+		class="block w-fit bg-clip-text text-transparent"
+	>
+		KASYNO
+	</h1>
+	<!-- <div class="actions"> -->
+	<!-- <div class="wrapper-form">
 			<button on:click={() => signIn('github')}>Sign In with GitHub</button>
 		</div>
 		<div class="wrapper-form">
 			<button on:click={() => signIn('discord')}>Sign In with Discord</button>
 		</div> -->
-		<div class="wrapper-form">
+	<!-- <div class="wrapper-form">
 			<div class="input-wrapper">
 				<label for="password">Password</label>
 				<input bind:value={password} type="password" id="password" name="password" required />
@@ -30,5 +32,9 @@
 			</button>
 			<button on:click={() => signOut()}> Sign Out </button>
 		</div>
-	</div>
+	</div> -->
 </nav>
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+</style>

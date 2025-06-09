@@ -6,7 +6,7 @@
 		IMAGE_SIZE = 200, // Size of each slot image (px)
 		SPACING = IMAGE_SIZE / 2; // Spacing between slots (px)
 	let slots: number[][] = [];
-	let speed = 2;
+	let speed = IMAGE_SIZE / 50;
 	let speedingUp = true;
 	let currentTransform: number;
 	onMount(() => {
@@ -18,12 +18,13 @@
 		function spin() {
 			let startTime = Date.now();
 			currentTransform += speed;
+			console.log(`Current Transform: ${currentTransform}, Speed: ${speed}`);
 			if (currentTransform > IMAGE_SIZE) {
 				currentTransform %= IMAGE_SIZE;
 				if (speedingUp) {
-					speed += IMAGE_SIZE / 150; // Speed up the animation
+					speed = lerp(speed, IMAGE_SIZE / 10, 0.1); // Gradually increase speed
 				} else {
-					speed -= IMAGE_SIZE / 66; // Slow down the animation
+					speed = lerp(speed, 0, 0.1); // Gradually decrease speed
 				}
 				if (speed >= IMAGE_SIZE / 10) {
 					speedingUp = false; // Start slowing down after reaching a certain speed
@@ -47,6 +48,10 @@
 
 		return () => cancelAnimationFrame(animationFrame);
 	});
+
+	function lerp(current: number, target: number, factor: number): number {
+		return current + (target - current) * factor;
+	}
 </script>
 
 <main>
@@ -63,8 +68,8 @@
 			<div class="flex flex-row">
 				{#each row as slot}
 					<div
-						class="height-[{IMAGE_SIZE}px] slot relative"
-						style="transform: translateY({currentTransform}px); margin-inline: {SPACING}px; top: -{(IMAGE_SIZE /
+						class="height-[{IMAGE_SIZE}px] slot relative border-x-2 border-black"
+						style="transform: translateY({currentTransform}px); padding-inline: {SPACING}px; top: -{(IMAGE_SIZE /
 							2) *
 							3}px;"
 					>

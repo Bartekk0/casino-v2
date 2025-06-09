@@ -1,6 +1,7 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import GitHub from '@auth/sveltekit/providers/github';
 import Credentials from '@auth/sveltekit/providers/credentials';
+import Google from '@auth/sveltekit/providers/google'
 import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
@@ -16,7 +17,10 @@ export const auth = SvelteKitAuth({
       clientId: process.env.AUTH_GITHUB_ID!,
       clientSecret: process.env.AUTH_GITHUB_SECRET!
     }),
-
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!
+    }),
     Credentials({
       credentials: {
         email: { label: 'email' },
@@ -39,7 +43,7 @@ export const auth = SvelteKitAuth({
   ],
 
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile}) {
       if (account?.provider === 'github' && account.access_token) {
         const res = await fetch('https://api.github.com/user/emails', {
           headers: {
@@ -55,7 +59,11 @@ export const auth = SvelteKitAuth({
           user.email = primaryEmail.email;
         }
       }
-      
+
+      if (account?.provider === 'google' && profile?.email) {
+        user.email = profile.email;
+      }
+
       if (user.email) {
         const client = await pool.connect();
         try {

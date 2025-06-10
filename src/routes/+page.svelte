@@ -68,6 +68,12 @@
 
 	<button on:click={() => signIn('github')}>Zaloguj przez GitHub</button>
 
+	<a href="/auth/signin/github">gitbuh proba??</a>
+
+	<form method="POST" action="/auth/signin/github">
+		<button type="submit">gitbuh</button>
+	</form>
+
 	{#if error}<p style="color: red">{error}</p>{/if}
 	{#if success}<p style="color: green">{success}</p>{/if}
 </nav>

@@ -1,16 +1,18 @@
 import { SvelteKitAuth } from '@auth/sveltekit';
 import GitHub from '@auth/sveltekit/providers/github';
 import Credentials from '@auth/sveltekit/providers/credentials';
-import Google from '@auth/sveltekit/providers/google'
+import Google from '@auth/sveltekit/providers/google';
 import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
+import { randomUUID } from 'crypto';
 
 export const auth = SvelteKitAuth({
   adapter: PostgresAdapter(pool),
   secret: process.env.AUTH_SECRET,
   trustHost: true,
+  debug: true,
 
   providers: [
     GitHub({
@@ -37,13 +39,21 @@ export const auth = SvelteKitAuth({
         const isValidPassword = await comparePasswords(credentials.password, user.password);
         if (!isValidPassword) throw new Error('Invalid credentials');
 
-        return user;
+        console.log('Authorize user:', user);
+        return {
+          id: String(user.id), // wymusz string
+          name: user.name ?? null,
+          email: user.email,
+          emailVerified: user.email_verified ?? null,
+          image: user.image ?? null
+        };
       }
-    })
+    }),
   ],
 
   callbacks: {
-    async signIn({ user, account, profile}) {
+    async signIn({ user, account, profile }) {
+      console.log('signIn callback', { user, account, profile });
       if (account?.provider === 'github' && account.access_token) {
         const res = await fetch('https://api.github.com/user/emails', {
           headers: {
@@ -102,6 +112,19 @@ export const auth = SvelteKitAuth({
       }
 
       return true;
+    },
+
+    async session({ session, user }) {
+      if (user) {
+        session.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image ?? null,
+          emailVerified: user.emailVerified ?? null
+        };
+      }
+      return session;
     }
   }
 });

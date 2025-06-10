@@ -32,6 +32,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@auth/core": "^0.39.1",
 		"@auth/pg-adapter": "^1.8.0",
 		"@auth/sveltekit": "^1.8.0",
 		"bcrypt": "^5.1.1",

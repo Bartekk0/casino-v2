@@ -1,11 +1,12 @@
-import type { LayoutServerLoad } from './$types';
+import { error } from "console";
 
-export const load: LayoutServerLoad = async (event) => {
-	// console.log(event.locals);
-
-	// const session = await event.locals.auth();
-	// NIE DZIAŁA
-	return {
-		// session
-	};
-};
+export async function load({ locals }) {
+  try {
+    const session = await locals.getSession();
+    console.log('SESSION:', session);
+    return { session };
+  } catch (err) {
+    console.error('LOAD ERROR:', err);
+    throw error(500, 'Server error');
+  }
+}

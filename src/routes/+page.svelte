@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { initDB } from './auth.js';
 	let email = '';
 	let password = '';
 	let error = '';
@@ -28,6 +29,8 @@
 			error = 'Błąd połączenia z serwerem';
 		}
 	}
+
+	export let data;
 </script>
 
 <nav>
@@ -59,6 +62,11 @@
 			<button on:click={() => signOut()}> Sign Out </button>
 		</div>
 	</div> -->
+	{#if data.session}
+		<p>Jesteś zalogowany jako {data.session.user?.id}</p>
+	{:else}
+		<p>Nie jesteś zalogowany.</p>
+	{/if}
 
 	<form on:submit|preventDefault={register}>
 		<input type="email" bind:value={email} placeholder="Email" required />
@@ -68,10 +76,14 @@
 
 	<button on:click={() => signIn('github')}>Zaloguj przez GitHub</button>
 
-	<a href="/auth/signin/github">gitbuh proba??</a>
+	<!-- <a href="/auth/signin/github">gitbuh proba??</a> -->
 
 	<form method="POST" action="/auth/signin/github">
 		<button type="submit">gitbuh</button>
+	</form>
+
+	<form method="POST" action="/auth/signout">
+		<button type="submit">Wyloguj</button>
 	</form>
 
 	{#if error}<p style="color: red">{error}</p>{/if}

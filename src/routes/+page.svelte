@@ -2,14 +2,12 @@
 	let isLoggedIn = false; // You can manage login state here
 </script>
 
-<main class="min-h-screen text-white select-none">
-	<div
-		aria-hidden="true"
-		style="
+<main
+	class="h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat text-white select-none"
+	style="
 			background-image: url('main_page/bg.jpg');
 		"
-		class="absolute inset-0 z-[-1] h-full w-full bg-cover bg-fixed bg-center bg-no-repeat"
-	></div>
+>
 	<!-- Navigation -->
 	<nav
 		class="absolute top-0 right-0 left-0 container mx-auto flex items-center justify-between p-6"

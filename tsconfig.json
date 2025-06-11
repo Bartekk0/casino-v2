@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"baseUrl": "./",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/*"],
+			"$lib/*": ["src/lib/*"]
 		},
 		"allowJs": true,
 		"checkJs": true,

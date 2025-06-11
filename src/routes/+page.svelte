@@ -1,7 +1,3 @@
-<script>
-	let isLoggedIn = false; // You can manage login state here
-</script>
-
 <main class="left-center w-fit transform text-center">
 	<div class="mb-12">
 		<h1 class="mb-3 text-8xl font-bold">
@@ -22,8 +18,3 @@
 		</a>
 	</div>
 </main>
-
-<style>
-	/* You can add global styles here if needed */
-	@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
-</style>

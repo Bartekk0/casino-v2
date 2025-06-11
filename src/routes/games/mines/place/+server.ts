@@ -1,21 +1,24 @@
 import { json } from '@sveltejs/kit';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ url }) => {
-  const bombCount = parseInt(url.searchParams.get('bombs') || '5');
+// Przechowuje gry aktywne na serwerze (na produkcji powinno być w bazie danych lub Redisie)
 
-  if (bombCount > 25) {
-    return json({ error: 'Too many bombs' }, { status: 400 });
-  }
+export const activeGames = new Map<string, { bombs: Set<number> }>();
 
-  const indices: number[] = [];
+export const POST: RequestHandler = async ({ request }) => {
+	const { bombCount } = await request.json();
 
-  while (indices.length < bombCount) {
-    const rand = Math.floor(Math.random() * 25);
-    if (!indices.includes(rand)) {
-      indices.push(rand);
-    }
-  }
+	if (bombCount > 24 || bombCount < 1) {
+		return json({ error: 'Invalid bomb count' }, { status: 400 });
+	}
 
-  return json({ bombs: indices });
+	const indices = new Set<number>();
+	while (indices.size < bombCount) {
+		indices.add(Math.floor(Math.random() * 25));
+	}
+
+	const gameId = crypto.randomUUID();
+	activeGames.set(gameId, { bombs: indices });
+
+	return json({ gameId });
 };

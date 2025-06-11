@@ -1,31 +1,16 @@
 <script lang="ts">
+	let gameId: string | null = null;
 	let bombs: number[] = [];
 	let revealed = new Set<number>();
-	let started = false;
 	let gameOver = true;
+
 	let bombCount = 5;
 	let balance = 100;
 	let stake = 10;
 	let multiplier = 1;
 	let waitStart = false;
-	const individualMultipliers: Record<number, number> = {};
 
-	async function startGame() {
-		console.log('sztart');
-		waitStart = true;
-		const res = await fetch(`/games/mines/place?bombs=${bombCount}`);
-		const data = await res.json();
-		waitStart = false;
-		console.log('poczekalem');
-		if (!res.ok) return;
-		started = true;
-		bombs = data.bombs;
-		console.log(bombs);
-		revealed = new Set();
-		multiplier = 1;
-		gameOver = false;
-		balance -= stake;
-	}
+	const individualMultipliers: Record<number, number> = {};
 
 	function factorial(n: number) {
 		if (n < 0) return NaN;
@@ -41,7 +26,7 @@
 
 	function calculateMultiplier() {
 		const totalTiles = 25;
-		const safeTiles = totalTiles - bombs.length;
+		const safeTiles = totalTiles - bombCount;
 		const s = revealed.size;
 
 		if (s > safeTiles) return 0;
@@ -49,29 +34,73 @@
 		const rawMultiplier = combination(totalTiles, s) / combination(safeTiles, s);
 
 		const houseEdge = 0.99;
-		return Math.floor((rawMultiplier * houseEdge)*100)/100;
+		return Math.floor(rawMultiplier * houseEdge * 100) / 100;
 	}
 
-	function clickCell(i: number) {
-		if (!started || revealed.has(i) || gameOver) return;
+	async function startGame() {
+		if (stake > balance) return;
+		waitStart = true;
+		const res = await fetch('/games/mines', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ action: 'start', bombCount, stake }),
+		});
+		const data = await res.json();
+		waitStart = false;
+		if (!res.ok) {
+			alert(data.error);
+			return;
+		}
+		gameId = data.gameId;
+		revealed = new Set();
+		bombs = [];
+		gameOver = false;
+		multiplier = 1;
+		balance -= stake;
+		for (const key in individualMultipliers) delete individualMultipliers[key];
+	}
 
-		if (bombs.includes(i)) {
+	async function clickCell(i: number) {
+		if (!gameId || gameOver || revealed.has(i)) return;
+
+		const res = await fetch('/games/mines', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ action: 'click', gameId, tile: i }),
+		});
+		const data = await res.json();
+		if (!res.ok) {
+			alert(data.error);
+			return;
+		}
+		if (data.hit) {
 			gameOver = true;
-			multiplier = 0;
+			bombs = data.bombs;
 		} else {
-			revealed = new Set([...revealed, i]);
-			multiplier = calculateMultiplier()
-			console.log(multiplier);
-			individualMultipliers[i] = Number(multiplier.toFixed(2));
+			revealed.add(data.tile);
+			multiplier = calculateMultiplier();
+			individualMultipliers[data.tile] = multiplier;
 		}
 	}
 
-	function cashOut() {
-		if (gameOver || !started) return;
-		balance += stake * multiplier;
-		started = false;
+	async function cashOut() {
+		if (!gameId || gameOver) return;
+
+		const res = await fetch('/games/mines', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ action: 'cashout', gameId }),
+		});
+		const data = await res.json();
+		if (!res.ok) {
+			alert(data.error);
+			return;
+		}
 		gameOver = true;
+		bombs = data.bombs;
+		balance += stake * multiplier;
 	}
+
 </script>
 
 <div>
@@ -93,9 +122,10 @@
 					? 'bomb'
 					: ''}"
 				on:click={() => clickCell(i)}
+				disabled={gameOver}
 			>
 				{#if revealed.has(i)}
-					<span class="multiplier">x{individualMultipliers[i]}</span>
+					<span class="multiplier">x{individualMultipliers[i].toFixed(2)}</span>
 				{:else if gameOver && bombs.includes(i)}
 					💣
 				{/if}
@@ -105,9 +135,9 @@
 
 	<div class="controls">
 		{#if gameOver}
-			<button class="startbutton" on:click={startGame} disabled={stake > balance || waitStart}
-				>Bet {stake ? stake.toFixed(2) : '-'}</button
-			>
+			<button class="startbutton" on:click={startGame} disabled={stake > balance || waitStart}>
+				Bet {stake ? stake.toFixed(2) : '-'}
+			</button>
 		{:else}
 			<button class="cashout" on:click={cashOut}>Cash Out {(stake * multiplier).toFixed(2)}</button>
 		{/if}
@@ -130,16 +160,23 @@
 		justify-content: center;
 		cursor: pointer;
 		font-weight: bold;
+		transition: background-color 0.3s;
+	}
+	.cell:hover {
+		background-color: #ddd;
 	}
 	.revealed {
 		background: #aaffaa;
+		color: green;
 	}
 	.bomb {
 		background: #ff6666;
+		color: white;
 	}
 	.multiplier {
 		color: green;
 		font-size: 0.9rem;
+		font-weight: bold;
 	}
 	.startbutton,
 	.cashout {
@@ -147,6 +184,7 @@
 		align-items: center;
 		justify-content: center;
 		width: fit-content;
+
 		padding: 15px;
 		height: 45px;
 		border: 2px solid green;
@@ -154,6 +192,7 @@
 		color: green;
 		font-weight: 900;
 		cursor: pointer;
+		transition: background-color 0.3s;
 	}
 	.startbutton:hover,
 	.cashout:hover {

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { signIn, signOut } from '@auth/sveltekit/client';
-	import { initDB } from './auth.js';
 	let email = '';
 	let password = '';
 	let error = '';
@@ -34,36 +32,8 @@
 </script>
 
 <nav>
-	<!-- <p>
-		These actions are all using the methods exported from
-		<code>@auth/sveltekit/client</code>
-	</p>
-	<div class="actions"> -->
-
-	<!-- <div class="wrapper-form">
-			<button on:click={() => signIn('github')}>Sign In with GitHub</button>
-		</div>
-		<div class="wrapper-form">
-			<button on:click={() => signIn('discord')}>Sign In with Discord</button>
-		</div> -->
-
-	<!-- <div class="wrapper-form">
-			<div class="input-wrapper">
-				<label for="password">Password</label>
-				<input bind:value={password} type="password" id="password" name="password" required />
-			</div>
-			<div class="input-wrapper">
-				<label for="email">Email</label>
-				<input bind:value={email} type="email" id="email" name="email" required />
-			</div>
-			<button on:click={() => signIn('credentials', { email, password })}>
-				Sign In with Credentials
-			</button>
-			<button on:click={() => signOut()}> Sign Out </button>
-		</div>
-	</div> -->
 	{#if data.session}
-		<p>Jesteś zalogowany jako {data.session.user?.id}</p>
+		<p>Jesteś zalogowany z id {data.session.user?.id}</p>
 	{:else}
 		<p>Nie jesteś zalogowany.</p>
 	{/if}
@@ -73,10 +43,6 @@
 		<input type="password" bind:value={password} placeholder="Hasło" required />
 		<button type="submit">Zarejestruj się</button>
 	</form>
-
-	<button on:click={() => signIn('github')}>Zaloguj przez GitHub</button>
-
-	<!-- <a href="/auth/signin/github">gitbuh proba??</a> -->
 
 	<form method="POST" action="/auth/signin/github">
 		<button type="submit">gitbuh</button>

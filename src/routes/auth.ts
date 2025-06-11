@@ -47,6 +47,7 @@ export const initDB = async () => {
 	email VARCHAR(255),
 	"emailVerified" TIMESTAMPTZ,
 	image TEXT,
+	password VARCHAR(255)
 	
 	PRIMARY KEY (id)
 	);

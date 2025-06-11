@@ -6,6 +6,7 @@ import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
+import { randomUUID } from 'crypto';
 
 class InvalidLoginError extends CredentialsSignin {
 	code = 'Invalid identifier or password';
@@ -46,14 +47,13 @@ export const auth = SvelteKitAuth({
 				const isValidPassword = await comparePasswords(credentials.password, user.password);
 				if (!isValidPassword) throw new InvalidLoginError();
 
-				console.log('Authorize user:', user);
 				return {
-					id: `${user.id}`, // wymusz string
+					id: `${user.id}`,
 					name: user.name ?? null,
 					email: user.email,
-					emailVerified: user.email_verified ?? null,
-					image: user.image ?? null
+					image: user.image ?? null,
 				};
+
 			}
 		})
 	],

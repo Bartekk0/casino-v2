@@ -29,6 +29,23 @@
 	}
 
 	export let data;
+
+	const handleLogin = async () => {
+		const res = await fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email, password })
+		});
+
+		if (res.ok) {
+			window.location.href = '/'; // redirect po zalogowaniu
+		} else {
+			const err = await res.json();
+			error = err.error;
+		}
+	};
 </script>
 
 <nav>
@@ -38,6 +55,16 @@
 		<p>Nie jesteś zalogowany.</p>
 	{/if}
 
+	login
+	<form on:submit|preventDefault={handleLogin}>
+		<input type="email" bind:value={email} placeholder="Email" required />
+		<input type="password" bind:value={password} placeholder="Hasło" required />
+		<button type="submit">Zaloguj się</button>
+		{#if error}
+			<p style="color: red">{error}</p>
+		{/if}
+	</form>
+	rejister
 	<form on:submit|preventDefault={register}>
 		<input type="email" bind:value={email} placeholder="Email" required />
 		<input type="password" bind:value={password} placeholder="Hasło" required />

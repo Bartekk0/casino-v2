@@ -28,24 +28,25 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 		const userId = insertResult.rows[0].id;
 
-		await client.query(
-			`INSERT INTO accounts (
-				"userId",
-				type,
-				provider,
-				"providerAccountId",
-				refresh_token,
-				access_token,
-				expires_at,
-				id_token,
-				scope,
-				session_state,
-				token_type
-			) VALUES (
-				$1, 'credentials', 'credentials', $2, null, null, null, null, null, null, null
-			)`,
-			[userId, email]
-		);
+		// await client.query(
+		// 	`INSERT INTO accounts (
+		// 		"userId",
+		// 		type,
+		// 		provider,
+		// 		"providerAccountId",
+		// 		refresh_token,
+		// 		access_token,
+		// 		expires_at,
+		// 		id_token,
+		// 		scope,
+		// 		session_state,
+		// 		token_type
+		// 	) VALUES (
+		// 		$1, 'credentials', 'credentials', $2, null, null, null, null, null, null, null
+		// 	)`,
+		// 	[userId, email]
+		// );
+		//chyba niepotrzebne bo jak robie sesje to samo sobie dodaje do accounts po zalogowaniu
 
 		await client.query('COMMIT');
 

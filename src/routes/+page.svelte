@@ -1,40 +1,67 @@
-<script lang="ts">
-	import { signIn, signOut } from '@auth/sveltekit/client';
-	let password = '';
-	let email = '';
+<script>
+	let isLoggedIn = false; // You can manage login state here
 </script>
 
-<nav class="flex items-center justify-center">
-	<h1
-		style="font-family: 'Rye', serif; background: linear-gradient(90deg, #007cf0, #ff1b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;  font-size: 400px"
-		class="block w-fit bg-clip-text text-transparent"
+<main class="min-h-screen text-white select-none">
+	<div
+		aria-hidden="true"
+		style="
+			background-image: url('main_page/bg.jpg');
+		"
+		class="absolute inset-0 z-[-1] h-full w-full bg-cover bg-fixed bg-center bg-no-repeat"
+	></div>
+	<!-- Navigation -->
+	<nav
+		class="absolute top-0 right-0 left-0 container mx-auto flex items-center justify-between p-6"
 	>
-		KASYNO
-	</h1>
-	<!-- <div class="actions"> -->
-	<!-- <div class="wrapper-form">
-			<button on:click={() => signIn('github')}>Sign In with GitHub</button>
+		<div class="hidden space-x-12 md:flex">
+			<a href="/" class="text-lg transition hover:text-yellow-400">HOME</a>
+			<a href="/games" class="text-lg transition hover:text-yellow-400">GAMES</a>
+			<a href="/about" class="text-lg transition hover:text-yellow-400">ABOUT</a>
+			<a href="/contact" class="text-lg transition hover:text-yellow-400">CONTACT</a>
 		</div>
-		<div class="wrapper-form">
-			<button on:click={() => signIn('discord')}>Sign In with Discord</button>
-		</div> -->
-	<!-- <div class="wrapper-form">
-			<div class="input-wrapper">
-				<label for="password">Password</label>
-				<input bind:value={password} type="password" id="password" name="password" required />
-			</div>
-			<div class="input-wrapper">
-				<label for="email">Email</label>
-				<input bind:value={email} type="email" id="email" name="email" required />
-			</div>
-			<button on:click={() => signIn('credentials', { email, password })}>
-				Sign In with Credentials
-			</button>
-			<button on:click={() => signOut()}> Sign Out </button>
-		</div>
-	</div> -->
-</nav>
+		<a href="/ " class="text-lg transition hover:text-yellow-400"
+			>{isLoggedIn ? 'LOGOUT' : 'LOGIN'}</a
+		>
 
-<style>
+		<button class="text-white focus:outline-none md:hidden" aria-label="Open mobile menu">
+			<svg class="h-9 w-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="3"
+					d="M4 6h16M4 12h16M4 18h16"
+				></path>
+			</svg>
+		</button>
+	</nav>
+
+	<!-- Hero Section -->
+	<main
+		class="absolute top-1/2 left-1/4 container w-fit -translate-x-1/2 -translate-y-1/2 transform text-center"
+	>
+		<div class="mb-12">
+			<h1 class="mb-3 text-8xl font-bold">
+				<span class="text-yellow-400">WELCOME TO THE</span><br />
+				<span class="text-9xl">CASINO</span>
+			</h1>
+
+			<p class="mx-auto mt-9 mb-15 max-w-2xl text-2xl">
+				Enjoy the best games and<br />
+				exciting rewards!
+			</p>
+
+			<a
+				class="transform rounded-full bg-yellow-500 px-12 py-4 text-xl font-bold text-gray-900 transition hover:bg-yellow-600"
+				href="/login"
+			>
+				JOIN NOW
+			</a>
+		</div>
+	</main>
+</main>
+
+<style global>
+	/* You can add global styles here if needed */
 	@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
 </style>

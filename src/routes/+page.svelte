@@ -2,7 +2,7 @@
 	let isLoggedIn = false; // You can manage login state here
 </script>
 
-<div class="left-center w-fit transform text-center">
+<main class="left-center w-fit transform text-center">
 	<div class="mb-12">
 		<h1 class="mb-3 text-8xl font-bold">
 			<span class="text-yellow-400">WELCOME TO THE</span><br />
@@ -21,7 +21,7 @@
 			JOIN NOW
 		</a>
 	</div>
-</div>
+</main>
 
 <style>
 	/* You can add global styles here if needed */

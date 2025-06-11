@@ -5,7 +5,7 @@
 	let isLoggedIn = false;
 </script>
 
-<main
+<div
 	class="h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat text-white select-none"
 	style="
 			background-image: url('main_page/bg.jpg');
@@ -36,4 +36,4 @@
 		</button>
 	</nav>
 	{@render children()}
-</main>
+</div>

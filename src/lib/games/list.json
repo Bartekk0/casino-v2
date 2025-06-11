@@ -1,0 +1,14 @@
+[
+	{
+		"name": "Game 1",
+		"href": "/game1",
+		"image": "",
+		"desc": "This is a description of Game 1."
+	},
+	{
+		"name": "Plinko",
+		"href": "/plinko",
+		"image": "",
+		"desc": "Drop chips and win prizes in the classic Plinko game."
+	}
+]

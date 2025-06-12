@@ -24,10 +24,17 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const hashedPassword = await saltAndHashPassword(password);
 
-		await client.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id', [
-			email,
-			hashedPassword
-		]);
+		const insertResult = await client.query(
+			'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id',
+			[email, hashedPassword]
+		);
+		const userId = insertResult.rows[0].id;
+		
+		await client.query(
+			'INSERT INTO wallets (user_id, balance_cents) VALUES ($1, $2)',
+			[userId, 0]
+		);
+
 		await client.query('COMMIT');
 
 		return new Response(JSON.stringify({ message: 'Registered successfully' }), { status: 201 });

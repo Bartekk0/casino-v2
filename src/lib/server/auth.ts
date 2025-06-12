@@ -6,13 +6,24 @@ import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
+import type { Adapter } from '@auth/core/Adapter';
 
 class InvalidLoginError extends CredentialsSignin {
 	code = 'Invalid identifier or password';
 }
 
+const baseAdapter = PostgresAdapter(pool) as Adapter;
+
+export const customAdapter: Adapter = {
+	...baseAdapter,
+	async linkAccount(account) {
+		console.log('Zablokowano automatyczne łączenie kont', account);
+		return;
+	}
+};
+
 export const auth = SvelteKitAuth({
-	adapter: PostgresAdapter(pool),
+	adapter: customAdapter,
 	secret: process.env.AUTH_SECRET,
 	trustHost: true,
 	debug: true,
@@ -91,14 +102,15 @@ export const auth = SvelteKitAuth({
 						const existingUser = result.rows[0];
 						user.id = existingUser.id;
 
+						// Dopisanie konta, jeśli potrzeba
 						await client.query(
 							`INSERT INTO accounts (
-                "userId", type, provider, "providerAccountId",
-                refresh_token, access_token, expires_at, id_token,
-                scope, session_state, token_type
-              ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
-              ) ON CONFLICT DO NOTHING`,
+					"userId", type, provider, "providerAccountId",
+					refresh_token, access_token, expires_at, id_token,
+					scope, session_state, token_type
+				) VALUES (
+					$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+				) ON CONFLICT DO NOTHING`,
 							[
 								existingUser.id,
 								account?.type,
@@ -113,6 +125,18 @@ export const auth = SvelteKitAuth({
 								account?.token_type
 							]
 						);
+
+						// Dopisanie portfela, jeśli nie istnieje
+						const walletRes = await client.query(
+							'SELECT * FROM wallets WHERE user_id = $1',
+							[existingUser.id]
+						);
+						if (walletRes.rows.length === 0) {
+							await client.query(
+								'INSERT INTO wallets (user_id, balance_cents) VALUES ($1, $2)',
+								[existingUser.id, 0]
+							);
+						}
 					}
 				} finally {
 					client.release();

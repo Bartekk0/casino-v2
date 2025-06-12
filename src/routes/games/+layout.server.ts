@@ -22,7 +22,7 @@ export async function load({ locals }) {
 		);
 
 		if (res.rowCount === 0) {
-			throw redirect(302, '/konto/brak-portfela');
+			throw redirect(302, '/konto/portfel');
 		}
 
 		const balance = res.rows[0].balance_cents / 100;

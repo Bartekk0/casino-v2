@@ -1,211 +1,152 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
-	let deck: any[] = [];
-	let dealer: any[] = [];
-	let dealerHidden = true;
+  import { onMount } from 'svelte';
+  import { fly } from 'svelte/transition';
 
-	let playerHands: any[][] = [];
-	let currentHandIndex = 0;
-	let playerDone = false;
-	let message = '';
-	let results: string[] = [];
-	let canSplit = false;
-	let loading = false;
+  type Card = { suit: string; value: string };
 
-	function cardValue(card: any) {
-		if (card.value === 'A') return 11;
-		if (['J', 'Q', 'K'].includes(card.value)) return 10;
-		return parseInt(card.value);
-	}
+  let phase: 'bet' | 'play' = 'bet';
+  let stake = 1;
+  let balance = 0;
+  let loading = false;
 
-	function calculateHand(hand: any) {
-		let total = 0;
-		let aces = 0;
-		for (const card of hand) {
-			const val = cardValue(card);
-			total += val;
-			if (card.value === 'A') aces++;
-		}
-		while (total > 21 && aces) {
-			total -= 10;
-			aces--;
-		}
-		return total;
-	}
+  let gameId: string;
+  let playerHands: Card[][] = [];
+  let dealer: Card[] = [];
+  let dealerHidden = true;
+  let currentHand = 0;
+  let splitAllowed = false;
+  let outcomes: ('win' | 'lose' | 'draw')[] = [];
+  let message = '';
 
-	async function newGame() {
-		if (loading) return;
-		loading = true;
-		const res = await fetch('/games/blackjack/draw');
-		const data = await res.json();
-		deck = data.deck;
-		dealer = data.dealer;
-		dealerHidden = true;
-		playerHands = [[...data.player]];
-		currentHandIndex = 0;
-		playerDone = false;
-		message = '';
-		results = [];
-		canSplit = data.player[0].value === data.player[1].value;
-		loading = false;
-	}
+  function cardValue(v: string) {
+    if (v === 'A') return 11;
+    if (['J','Q','K'].includes(v)) return 10;
+    return +v;
+  }
 
-	function hit() {
-		if (playerDone || loading) return;
-		const hand = playerHands[currentHandIndex];
-		hand.push(deck.shift());
-		playerHands = [...playerHands];
+  function handValue(h: Card[]) {
+    let t = 0, ac = 0;
+    for (const c of h) {
+      const v = cardValue(c.value);
+      t += v;
+      if (c.value === 'A') ac++;
+    }
+    while (t > 21 && ac > 0) { t -= 10; ac--; }
+    return t;
+  }
 
-		const total = calculateHand(hand);
-		if (total > 21) {
-			nextHand();
-		}
-	}
+  onMount(async () => {
+    const res = await fetch('/api/portfel/balance');
+    if (res.ok) balance = (await res.json()).balance;
+  });
 
-	function stand() {
-		if (playerDone || loading) return;
-		nextHand();
-	}
+  async function start() {
+    if (loading || stake <= 0 || stake > balance) return;
+    loading = true;
+    const res = await fetch('/games/blackjack/draw', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'start', stake })
+    });
+    const d = await res.json();
+    loading = false;
+    if (!res.ok) return alert(d.error);
 
-	async function nextHand() {
-		if (currentHandIndex < playerHands.length - 1) {
-			currentHandIndex++;
-		} else {
-			playerDone = true;
-			dealerHidden = false;
-			await new Promise((resolve) => setTimeout(resolve, 700));
-			await dealerPlay();
-		}
-	}
+    phase = 'play';
+    gameId = d.gameId;
+    balance = d.balance;
+    playerHands = [d.player];
+    dealer = d.dealer;
+    dealerHidden = true;
+    currentHand = 0;
+    splitAllowed = d.splitAllowed;
+    outcomes = [];
+    message = '';
+  }
 
-	async function dealerPlay() {
-		while (calculateHand(dealer) < 17) {
-			dealer.push(deck.shift());
-			dealer = [...dealer];
-			await new Promise((resolve) => setTimeout(resolve, 400));
-		}
+  async function action(act: 'hit'|'stand'|'split') {
+    if (loading) return;
+    loading = true;
+    const res = await fetch('/games/blackjack/draw', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ action: act, gameId })
+    });
+    const d = await res.json();
+    loading = false;
+    if (!res.ok) return alert(d.error);
 
-		const dealerScore = calculateHand(dealer);
-		results = [];
+    // update player hands & currentHand
+    if (d.playerHands) playerHands = d.playerHands;
+    if (d.currentHand != null) currentHand = d.currentHand;
 
-		for (const hand of playerHands) {
-			const playerScore = calculateHand(hand);
-			if (playerScore > 21) {
-				results.push('lose');
-			} else if (dealerScore > 21 || playerScore > dealerScore) {
-				results.push('win');
-			} else if (playerScore < dealerScore) {
-				results.push('lose');
-			} else {
-				results.push('draw');
-			}
-		}
+    // if transition to dealer phase
+    if (d.dealer) {
+      dealerHidden = false;
+      dealer = d.dealer;
+      outcomes = d.outcomes;
+      balance = d.balance;
+      message = 'Gra zakończona';
+      return;
+    }
 
-		message = 'Gra zakończona';
-	}
-
-	function split() {
-		if (playerDone || loading) return;
-		if (!canSplit || playerHands.length > 1) return;
-
-		const original = playerHands[0];
-		const card1 = original[0];
-		const card2 = original[1];
-
-		playerHands = [
-			[card1, deck.shift()],
-			[card2, deck.shift()]
-		];
-		canSplit = false;
-	}
-
-	onMount(() => {
-		newGame();
-	});
-
-	function formatCardClass(card: { value?: string; suit?: string }): string {
-		if (!card || !card.value || !card.suit) {
-			console.warn('Nieprawidłowa karta:', card);
-			return 'unknown';
-		}
-
-		const valueMap: Record<string, string> = {
-			A: 'a',
-			J: 'j',
-			Q: 'q',
-			K: 'k'
-		};
-
-		const suitMap: Record<string, string> = {
-			spades: 's',
-			hearts: 'h',
-			diamonds: 'd',
-			clubs: 'c'
-		};
-
-		const val = valueMap[card.value] ?? card.value.toLowerCase();
-		const suit = suitMap[card.suit.toLowerCase()];
-		if (!suit) {
-			console.warn('Nieznany kolor karty:', card.suit);
-			return 'unknown';
-		}
-		return `${val}${suit}`;
-	}
+    // bust detection client-side & trigger dealer
+    const hand = playerHands[currentHand];
+    if (handValue(hand) > 21) {
+      // auto-stand on bust
+      await action('stand');
+    }
+  }
 </script>
 
-<div class="bg"></div>
-<h1>Blackjack</h1>
+{#if phase === 'bet'}
+  <div class="bet-screen">
+    <h2>Obstaw</h2>
+    <p>Saldo: {balance.toFixed(2)} zł</p>
+    <input type="number" bind:value={stake} min="1" max={balance} step="1" />
+    <button on:click={start} disabled={loading||stake>balance}>Graj</button>
+  </div>
+{:else}
+  <div class="game-screen">
+    <h2>Dealer</h2>
+    <div class="cards">
+      {#each dealer as c, i}
+        <div class="card-container" in:fly={{ y: 40, duration: 300 }}>
+          {#if i === 0}
+            <div class="flip-card {dealerHidden ? '' : 'flipped'}">
+              <div class="flip-front"><span class="pcard-back"></span></div>
+              <div class="flip-back"><span class="pcard pcard-{c.value.toLowerCase()}{c.suit[0]}"/></div>
+            </div>
+          {:else}
+            <span class="pcard pcard-{c.value.toLowerCase()}{c.suit[0]}" />
+          {/if}
+        </div>
+      {/each}
+    </div>
+    {#if !dealerHidden}<p>Punkty: {handValue(dealer)}</p>{/if}
 
-<h2>Dealer</h2>
-<div class="cards">
-	{#each dealer as card, i (card.value + card.suit + i)}
-		<div class="card-container" in:fly={{ y: 40, duration: 300 }}>
-			{#if i === 0}
-				<div class="flip-card {dealerHidden ? '' : 'flipped'}">
-					<div class="flip-front">
-						<span class="pcard-back"></span>
-					</div>
-					<div class="flip-back">
-						<span class={`pcard pcard-${formatCardClass(card)}`}></span>
-					</div>
-				</div>
-			{:else}
-				<span class={`pcard pcard-${formatCardClass(card)}`}></span>
-			{/if}
-		</div>
-	{/each}
-</div>
+    <h2>Ty</h2>
+    {#each playerHands as hand, idx}
+      <div class="hand {idx === currentHand ? 'active' : ''} {outcomes[idx]}">
+        <div class="cards">
+          {#each hand as c}
+            <div class="card-container" in:fly={{ y: 40, duration: 300 }}>
+              <span class="pcard pcard-{c.value.toLowerCase()}{c.suit[0]}" />
+            </div>
+          {/each}
+        </div>
+        <p>Punkty: {handValue(hand)}</p>
+        {#if outcomes[idx]}<p class={outcomes[idx]}>{outcomes[idx]}</p>{/if}
+      </div>
+    {/each}
 
-{#if !dealerHidden}
-	<p>Punkty: {calculateHand(dealer)}</p>
+    <div class="controls">
+      <button on:click={() => action('hit')} disabled={loading}>Dobierz (Hit)</button>
+      <button on:click={() => action('stand')} disabled={loading}>Stop (Stand)</button>
+      <button on:click={() => action('split')} disabled={!splitAllowed||loading}>Split</button>
+    </div>
+    <p>{message}</p>
+    <p class="balance">Saldo: {balance.toFixed(2)} zł</p>
+  </div>
 {/if}
-
-<h2>Gracz</h2>
-{#each playerHands as hand, i}
-	<div
-		class="hand {i === currentHandIndex ? 'active' : ''} {results[i]}"
-		style="width: fit-content;"
-	>
-		<div class="cards">
-			{#each hand as card}
-				<div class="card-container" in:fly={{ y: 40, duration: 300 }}>
-					<span class={`pcard pcard-${formatCardClass(card)}`}></span>
-				</div>
-			{/each}
-		</div>
-		<p>Punkty: {calculateHand(hand)}</p>
-	</div>
-{/each}
-
-<div class="controls">
-	<button on:click={hit} disabled={playerDone || loading}>Dobierz (Hit)</button>
-	<button on:click={stand} disabled={playerDone || loading}>Stop (Stand)</button>
-	<button on:click={split} disabled={!canSplit || playerHands.length > 1 || loading}>Split</button>
-	<button on:click={newGame} disabled={loading}>Restart</button>
-</div>
-
-<p>{message}</p>
 
 <style>
 	@import './playing-cards.min.css';

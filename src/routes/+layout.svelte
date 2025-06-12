@@ -1,9 +1,13 @@
 <script lang="ts">
 	import '../app.css';
 	let { children } = $props();
-
+	import { page } from '$app/state';
 	let isLoggedIn = false;
 </script>
+
+<svelte:head>
+	<title>Casino</title>
+</svelte:head>
 
 <div
 	class="h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat text-white select-none"
@@ -15,14 +19,44 @@
 		class="absolute top-0 right-0 left-0 container mx-auto flex items-center justify-between p-6"
 	>
 		<div class="hidden space-x-12 md:flex">
-			<a href="/" class="text-lg transition hover:text-yellow-400">HOME</a>
-			<a href="/games" class="text-lg transition hover:text-yellow-400">GAMES</a>
-			<a href="/about" class="text-lg transition hover:text-yellow-400">ABOUT</a>
-			<a href="/contact" class="text-lg transition hover:text-yellow-400">CONTACT</a>
+			<a
+				href="/"
+				class="text-lg transition hover:text-yellow-400"
+				class:text-yellow-400={page.url.pathname === '/'}>HOME</a
+			>
+			<a
+				href="/games"
+				class="text-lg transition hover:text-yellow-400"
+				class:text-yellow-400={page.url.pathname === '/games'}>GAMES</a
+			>
+			<a
+				href="/about"
+				class="text-lg transition hover:text-yellow-400"
+				class:text-yellow-400={page.url.pathname === '/about'}>ABOUT</a
+			>
+			<a
+				href="/contact"
+				class="text-lg transition hover:text-yellow-400"
+				class:text-yellow-400={page.url.pathname === '/contact'}>CONTACT</a
+			>
 		</div>
-		<a href="/ " class="text-lg transition hover:text-yellow-400"
-			>{isLoggedIn ? 'LOGOUT' : 'LOGIN'}</a
-		>
+		<div class="flex items-center space-x-6">
+			{#if !isLoggedIn}
+				<a
+					href="/login"
+					class="text-lg transition hover:text-yellow-400"
+					class:text-yellow-400={page.url.pathname === '/login'}
+					>{isLoggedIn ? 'LOGOUT' : 'LOGIN'}</a
+				>
+				<a
+					href="/register"
+					class="text-lg transition hover:text-yellow-400"
+					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
+				>
+			{:else}
+				<a href="/" class="text-lg transition hover:text-yellow-400">LOGOUT</a>
+			{/if}
+		</div>
 
 		<button class="text-white focus:outline-none md:hidden" aria-label="Open mobile menu">
 			<svg class="h-9 w-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,5 +69,7 @@
 			</svg>
 		</button>
 	</nav>
-	{@render children()}
+	<main class="left-center w-fit transform text-center">
+		{@render children()}
+	</main>
 </div>

@@ -78,6 +78,7 @@
 			bombs = data.bombs;
 		} else {
 			revealed.add(data.tile);
+			revealed = new Set<number>(revealed)
 			multiplier = calculateMultiplier();
 			individualMultipliers[data.tile] = multiplier;
 		}
@@ -163,7 +164,7 @@
 		transition: background-color 0.3s;
 	}
 	.cell:hover {
-		background-color: #ddd;
+		box-shadow: 1px 1px 5px black;
 	}
 	.revealed {
 		background: #aaffaa;

@@ -172,31 +172,32 @@
 <main
 	class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-b from-[#0a0c1a] to-[#1e3a5c] font-sans"
 >
-	<h2 class="text-4xl font-bold text-white drop-shadow-md">Plinko</h2>
-	<p class="mt-4 mb-2 text-center text-lg text-white">Your credits: {credits}</p>
-	<p class="mb-4 text-center text-lg text-white">Current multiplier: {multiplier}x</p>
+	<h2 class="text-5xl font-bold text-white drop-shadow-md">Plinko</h2>
 
-	<p class="mb-2 text-center text-lg text-white">
-		Ball cost: {DEFAULT_BALL_COST * multiplier} credits
+	<p class="mt-4 mb-2 text-center text-lg text-white">Your credits: {credits}$</p>
+	<p
+		class="mb-2 text-center text-lg {credits < DEFAULT_BALL_COST * multiplier
+			? 'text-red-500'
+			: 'text-white'}"
+	>
+		Ball cost: {DEFAULT_BALL_COST * multiplier}$
 	</p>
-	<div class="flex gap-4">
-		<button class="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
-			>Buy more credits</button
-		>
-		<button class="rounded bg-red-600 px-4 py-2 text-white transition hover:bg-red-700"
-			>Cash Out</button
-		>
-	</div>
+	<button
+		id="drop-ball-button"
+		class="mt-2 rounded-full bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-500"
+	>
+		Drop a ball ({DEFAULT_BALL_COST * multiplier}$)
+	</button>
 	<div class="mt-6 flex flex-row items-center gap-4">
 		<div class="flex flex-col gap-2">
-			{#each BOXES_OPTIONS as box, i}
+			{#each BOXES_OPTIONS as box}
 				<div class="flex w-16 flex-col items-center">
 					<div
 						class="flex h-6 w-full items-center justify-center rounded-md"
 						style="background: {box.color};"
 					>
 						<span class="text-xs font-bold text-black drop-shadow">
-							{box.credits * multiplier} pts
+							{box.credits * multiplier}$
 						</span>
 					</div>
 				</div>
@@ -225,10 +226,9 @@
 			{/each}
 		</div>
 	</div>
-	<button
-		id="drop-ball-button"
-		class="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-500"
-	>
-		Drop a ball
-	</button>
+
+	<p class="mt-2 mb-4 max-w-2xl text-center text-blue-200">
+		Drop a ball and watch it bounce through pegs into one of the prize boxes below. Each box awards
+		a different amount of credits. Choose your multiplier to increase risk and reward!
+	</p>
 </main>

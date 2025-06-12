@@ -48,6 +48,11 @@ export const POST: RequestHandler = async ({ request }) => {
 		// );
 		//chyba niepotrzebne bo jak robie sesje to samo sobie dodaje do accounts po zalogowaniu
 
+		await client.query(
+			'INSERT INTO wallets (user_id, balance_cents) VALUES ($1, $2)',
+			[userId, 0]
+		);
+
 		await client.query('COMMIT');
 
 		return new Response(JSON.stringify({ message: 'Zarejestrowano pomyślnie' }), { status: 201 });

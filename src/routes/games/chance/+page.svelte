@@ -32,7 +32,7 @@
 		}
 		loading = true;
 		message = '';
-		const res = await fetch('/games/test/result', {
+		const res = await fetch('/games/chance/result', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -118,10 +118,8 @@
 		max-width: 1080px;
 		margin: 3rem auto;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		background: #000;
 		padding: 3rem;
 		border-radius: 16px;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 		text-align: center;
 		color: #fff;
 	}
@@ -178,7 +176,13 @@
 	input[type='range']::-webkit-slider-runnable-track {
 		height: 6px;
 		border-radius: 8px;
-		background: linear-gradient(to right, #f1c40f 0%, #f1c40f var(--progress), #e74c3c var(--progress), #e74c3c 100%);
+		background: linear-gradient(
+			to right,
+			#f1c40f 0%,
+			#f1c40f var(--progress),
+			#e74c3c var(--progress),
+			#e74c3c 100%
+		);
 	}
 
 	input[type='range']::-moz-range-thumb {
@@ -193,7 +197,13 @@
 	input[type='range']::-moz-range-track {
 		height: 6px;
 		border-radius: 8px;
-		background: linear-gradient(to right, #f1c40f 0%, #f1c40f var(--progress), #e74c3c var(--progress), #e74c3c 100%);
+		background: linear-gradient(
+			to right,
+			#f1c40f 0%,
+			#f1c40f var(--progress),
+			#e74c3c var(--progress),
+			#e74c3c 100%
+		);
 	}
 
 	input[type='number'] {
@@ -269,4 +279,3 @@
 		box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
 	}
 </style>
-

@@ -31,8 +31,8 @@
 	},
 	{
 		"name": "Chance",
-		"href": "test",
-		"image": "roulette.png",
+		"href": "chance",
+		"image": "dice.png",
 		"desc": "Take your chance to become rich. Choose a number and may luck be with you!"
 	}
 ]

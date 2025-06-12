@@ -1,3 +1,4 @@
+// +layout.server.ts
 import { error } from '@sveltejs/kit';
 import { pool } from '../utils/db';
 
@@ -6,7 +7,7 @@ export async function load({ locals }) {
     const session = await locals.getSession();
 
     if (!session?.user) {
-      return { session: null, balance: null };
+      return { session: null, walletExists: false, balance: null };
     }
 
     const userId = Number(session.user.id);
@@ -15,10 +16,19 @@ export async function load({ locals }) {
     try {
       const res = await client.query('SELECT balance_cents FROM wallets WHERE user_id = $1', [userId]);
 
-      const balance = (res.rowCount??0) > 0 ? res.rows[0].balance_cents / 100 : 0;
+      if (res.rowCount === 0) {
+        return {
+          session,
+          walletExists: false,
+          balance: null
+        };
+      }
+
+      const balance = res.rows[0].balance_cents / 100;
 
       return {
         session,
+        walletExists: true,
         balance
       };
     } finally {

@@ -4,7 +4,14 @@
 
 <header>
   {#if data.session?.user}
-    <p>Witaj, {data.session.user.email}! Masz saldo: {data.balance?.toFixed(2)} PLN</p>
+    <p>
+      Witaj, {data.session.user.email}! 
+      {#if data.walletExists}
+        Masz saldo: {data.balance?.toFixed(2)} PLN
+      {:else}
+        <a href="/konto/brak-portfela">Nie masz portfela, kliknij tutaj, aby go utworzyć</a>
+      {/if}
+    </p>
     <form method="POST" action="/auth/signout">
       <button type="submit">Wyloguj</button>
     </form>

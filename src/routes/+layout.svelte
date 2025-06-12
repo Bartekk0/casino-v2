@@ -2,7 +2,7 @@
 	import '../app.css';
 	let { children } = $props();
 	import { page } from '$app/state';
-	let isLoggedIn = false;
+	let isLoggedIn = true;
 </script>
 
 <svelte:head>
@@ -54,7 +54,8 @@
 					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
 				>
 			{:else}
-				<a href="/" class="text-lg transition hover:text-yellow-400">LOGOUT</a>
+				<a href="/profile/wallet" class="text-lg transition hover:text-yellow-400">WALLET</a>
+				<a href="/auth/signout" class="text-lg transition hover:text-yellow-400">LOGOUT</a>
 			{/if}
 		</div>
 

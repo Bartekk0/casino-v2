@@ -39,3 +39,4 @@ export async function load({ locals }) {
     throw error(500, 'Server error');
   }
 }
+

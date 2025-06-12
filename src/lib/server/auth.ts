@@ -7,7 +7,6 @@ import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
 import type { Adapter } from '@auth/core/Adapter';
-import { randomUUID } from 'crypto';
 
 class InvalidLoginError extends CredentialsSignin {
 	code = 'Invalid identifier or password';
@@ -27,9 +26,10 @@ export const auth = SvelteKitAuth({
 	adapter: customAdapter,
 	secret: process.env.AUTH_SECRET,
 	trustHost: true,
+	debug: true,
 	pages: {
-		signIn: "/signin",
-
+		signIn: '/login',
+		signOut: '/logout'
 	},
 	providers: [
 		GitHub({
@@ -64,9 +64,8 @@ export const auth = SvelteKitAuth({
 					id: `${user.id}`,
 					name: user.name ?? null,
 					email: user.email,
-					image: user.image ?? null,
+					image: user.image ?? null
 				};
-
 			}
 		})
 	],

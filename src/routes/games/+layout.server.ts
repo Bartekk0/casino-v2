@@ -5,21 +5,20 @@ export async function load({ locals }) {
 	const session = await locals.getSession();
 
 	if (!session) {
-		throw redirect(302, '/');
+		throw redirect(302, '/auth/signin');
 	}
 
 	const userId = session.user?.id;
 
 	if (!userId) {
-		throw redirect(302, '/');
+		throw redirect(302, '/auth/signin');
 	}
 
 	const client = await pool.connect();
 	try {
-		const res = await client.query(
-			'SELECT balance_cents FROM wallets WHERE user_id = $1',
-			[userId]
-		);
+		const res = await client.query('SELECT balance_cents FROM wallets WHERE user_id = $1', [
+			userId
+		]);
 
 		if (res.rowCount === 0) {
 			throw redirect(302, '/konto/portfel');

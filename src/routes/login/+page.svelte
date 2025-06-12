@@ -37,7 +37,7 @@
 		if (res.ok) {
 			submitted = true;
 			setTimeout(() => {
-				window.location.href = '/';
+				window.location.href = params.get('callbackUrl') || '/';
 			}, 1200);
 		} else {
 			const err = await res.json();

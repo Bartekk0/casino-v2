@@ -153,6 +153,7 @@
 		return `${val}${suit}`;
 	}
 </script>
+
 <div class="bg"></div>
 <h1>Blackjack</h1>
 
@@ -210,224 +211,221 @@
 	@import './playing-cards.min.css';
 
 	body {
-		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		background-color: #f0f4f8;
-		margin: 0;
-		padding: 2rem;
-		color: #222;
-		user-select: none;
-	}
-	.bg {
-		background: url('/images/table.jpg') !important;
-		width: 100vw;
-		height: 100vh;
-		z-index: -3;
-		position: fixed;
-	}
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #000;
+	margin: 0;
+	padding: 2rem;
+	color: #fff;
+	user-select: none;
+}
 
-	h1,
-	h2 {
-		text-align: center;
-		margin-bottom: 1rem;
-		font-weight: 700;
-		color: white;
-		font-size: 1.5em;
-	}
+h1,
+h2 {
+	text-align: center;
+	margin-bottom: 1rem;
+	font-weight: 700;
+	color: #ffd700;
+	font-size: 1.5em;
+}
 
-	.cards {
-		display: flex;
-		gap: 16px;
-		flex-wrap: nowrap;
-		overflow-x: auto;
-		justify-content: center;
-		margin-bottom: 0.75rem;
-		padding-bottom: 8px;
-		overflow: hidden;
-	}
+.cards {
+	display: flex;
+	gap: 16px;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	justify-content: center;
+	margin-bottom: 0.75rem;
+	padding-bottom: 8px;
+	overflow: hidden;
+}
 
-	.cards::-webkit-scrollbar {
-		height: 8px;
-	}
+.cards::-webkit-scrollbar {
+	height: 8px;
+}
 
-	.cards::-webkit-scrollbar-thumb {
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 4px;
-	}
+.cards::-webkit-scrollbar-thumb {
+	background: rgba(255, 215, 0, 0.4);
+	border-radius: 4px;
+}
 
-	.hand {
-		border: 2px dashed #aaa;
-		padding: 14px;
-		border-radius: 14px;
-		margin-bottom: 2rem;
-		width: 100%;
-		max-width: none;
-		background-color: #fff;
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-		transition:
-			background-color 0.3s ease,
-			border-color 0.3s ease;
-	}
+.hand {
+	border: 2px dashed #ffd700;
+	padding: 14px;
+	border-radius: 14px;
+	margin-bottom: 2rem;
+	width: 100%;
+	background-color: rgba(255, 215, 0, 0.05);
+	box-shadow: 0 2px 10px rgba(255, 215, 0, 0.1);
+	transition:
+		background-color 0.3s ease,
+		border-color 0.3s ease;
+	color: white;
+}
 
-	.hand.active {
-		border-color: #007acc;
-		background-color: rgba(200, 200, 200, 0.5);
-		box-shadow: 0 0 14px 3px rgba(102, 170, 255, 0.4);
-	}
+.hand.active {
+	border-color: #ffea70;
+	background-color: rgba(255, 215, 0, 0.15);
+	box-shadow: 0 0 14px 3px rgba(255, 215, 0, 0.4);
+}
 
-	.hand.win {
-		border-color: #4caf50;
-		background-color: #e6f9ea;
-	}
+.hand.win {
+	border-color: #ffd700;
+	background-color: rgba(255, 215, 0, 0.3);
+}
 
-	.hand.lose {
-		border-color: #f44336;
-		background-color: #fdecea;
-	}
+.hand.lose {
+	border-color: #ff4d4d;
+	background-color: rgba(255, 0, 0, 0.1);
+}
 
-	.hand.draw {
-		border-color: #9e9e9e;
-		background-color: #f4f4f4;
-	}
+.hand.draw {
+	border-color: #aaa;
+	background-color: #222;
+}
 
-	.controls {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
-		gap: 16px;
-		margin-top: 1.5rem;
-	}
+.controls {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 16px;
+	margin-top: 1.5rem;
+}
 
-	button {
-		padding: 14px 28px;
-		font-size: 1.1rem;
-		border: none;
-		border-radius: 8px;
-		background-color: #007acc;
-		color: white;
-		cursor: pointer;
-		font-weight: 700;
-		box-shadow: 0 3px 8px rgba(0, 122, 204, 0.5);
-		transition:
-			background-color 0.25s ease,
-			box-shadow 0.25s ease;
-	}
+button {
+	padding: 14px 28px;
+	font-size: 1.1rem;
+	border: none;
+	border-radius: 8px;
+	background-color: #ffd700;
+	color: #000;
+	cursor: pointer;
+	font-weight: 700;
+	box-shadow: 0 3px 8px rgba(255, 215, 0, 0.4);
+	transition:
+		background-color 0.25s ease,
+		box-shadow 0.25s ease;
+}
 
-	button:disabled {
-		background-color: #aaa;
-		cursor: not-allowed;
-		box-shadow: none;
-	}
+button:disabled {
+	background-color: #666;
+	color: #ccc;
+	cursor: not-allowed;
+	box-shadow: none;
+}
 
-	button:hover:enabled {
-		background-color: #005f99;
-		box-shadow: 0 4px 12px rgba(0, 95, 153, 0.7);
-	}
+button:hover:enabled {
+	background-color: #ffea70;
+	box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+}
 
-	p {
-		text-align: center;
-		font-weight: 700;
-		font-size: 1.2rem;
-		color: #222;
-		margin-top: 0.5rem;
-	}
+p {
+	text-align: center;
+	font-weight: 700;
+	font-size: 1.2rem;
+	color: white;
+	margin-top: 0.5rem;
+}
 
-	.flip-container {
-		perspective: 1200px;
-		width: 140px;
-		height: 200px;
-		margin: 0 8px;
-		flex: 0 0 auto;
-	}
+.flip-container {
+	perspective: 1200px;
+	width: 140px;
+	height: 200px;
+	margin: 0 8px;
+	flex: 0 0 auto;
+}
 
-	.flip-card {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		transform-style: preserve-3d;
-		transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-		cursor: default;
-		user-select: none;
-	}
+.flip-card {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	transform-style: preserve-3d;
+	transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	cursor: default;
+	user-select: none;
+}
 
-	.flip-card.flipped {
-		transform: rotateY(180deg);
-	}
+.flip-card.flipped {
+	transform: rotateY(180deg);
+}
 
-	.flip-front,
-	.flip-back {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		backface-visibility: hidden;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: none;
-		border: none;
-		user-select: none;
-		background: rgba(0,0,0,0);
-	}
+.flip-front,
+.flip-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: none;
+	border: none;
+	user-select: none;
+}
 
-	.flip-front {
-		background: rgba(0,0,0,0);
-		color: white;
-	}
+.flip-front {
+	background: rgba(0, 0, 0, 0);
+	color: white;
+}
 
-	.flip-back {
-		transform: rotateY(180deg);
-	}
+.flip-back {
+	transform: rotateY(180deg);
+}
 
+.card-container {
+	width: 140px;
+	height: 210px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: default;
+	user-select: none;
+}
+
+.pcard {
+	display: inline-block;
+	width: 120px !important;
+	height: 170px !important;
+	background-size: contain !important;
+	background-repeat: no-repeat !important;
+}
+
+.cards > * {
+	flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+	.flip-container,
 	.card-container {
-		width: 140px;
-		height: 210px;
-		flex: 0 0 auto;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: default;
-		user-select: none;
+		width: 100px;
+		height: 140px;
 	}
-
+	.flip-front,
+	.flip-back,
+	.card {
+		font-size: 2.5rem;
+	}
 	.pcard {
-		display: inline-block;
-		width: 120px !important;
-		height: 170px !important;
-		background-size: contain !important;
-		background-repeat: no-repeat !important;
+		width: 85px !important;
+		height: 120px !important;
 	}
+	button {
+		padding: 10px 20px;
+		font-size: 0.95rem;
+	}
+}
 
-	.cards > * {
-		flex-shrink: 0;
-	}
+.pcard-back {
+	width: 120px !important;
+	height: 170px !important;
+}
 
-	@media (max-width: 600px) {
-		.flip-container,
-		.card-container {
-			width: 100px;
-			height: 140px;
-		}
-		.flip-front,
-		.flip-back,
-		.card {
-			font-size: 2.5rem;
-		}
-		.pcard {
-			width: 85px !important;
-			height: 120px !important;
-		}
-		button {
-			padding: 10px 20px;
-			font-size: 0.95rem;
-		}
-	}
-	.pcard-back {
-		width: 120px !important;
-		height: 170px !important;
-	}
-	.flip-front {
-		background: rgba(0,0,0,0);
-	}
-	.hand {
-		margin: 30px auto;
-	}
+.flip-front {
+	background: rgba(0, 0, 0, 0);
+}
+
+.hand {
+	margin: 30px auto;
+}
+
 </style>

@@ -78,7 +78,7 @@
 		/>
 
 		<label class="checkbox-label">
-			<input type="checkbox" bind:checked={rollAbove} disabled={loading} on:change={() => {}} />
+			<input type="checkbox" bind:checked={rollAbove} disabled={loading} />
 			{rollAbove ? 'Higher (≥)' : 'Lower (≤)'}
 		</label>
 

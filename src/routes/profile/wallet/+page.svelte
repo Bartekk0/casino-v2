@@ -70,14 +70,14 @@
 				bind:value={amountToAdd}
 				id="amount"
 				placeholder="e.g. 10.00"
-				class="mt-1 box-border w-full rounded-3xl border border-gray-300 p-2.5 pl-4 text-base text-white"
+				class="mt-1 box-border w-full rounded-3xl border border-white/50 p-2.5 pl-4 text-base text-white"
 			/>
 			<div class="my-4 flex flex-wrap gap-2">
 				{#each [10, 20, 50, 100, 500] as preset}
 					<button
 						type="button"
 						on:click={() => setQuickAmount(preset)}
-						class="cursor-pointer rounded-full border border-white px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-white hover:text-black"
+						class="cursor-pointer rounded-full border border-white/50 px-4 py-1.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-white hover:text-black"
 					>
 						{preset}$
 					</button>
@@ -86,7 +86,7 @@
 			<button
 				on:click={depositMoney}
 				disabled={loading || amountToAdd <= 0}
-				class="mt-4 w-full rounded-full px-6 py-3 text-base text-white transition-colors duration-300 hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:bg-gray-400"
+				class="mt-4 w-full rounded-full border border-white/50 px-6 py-2 text-base text-white transition-colors duration-300 hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:bg-gray-400"
 			>
 				{loading ? 'Processing...' : `Deposit ${amountToAdd}$`}
 			</button>

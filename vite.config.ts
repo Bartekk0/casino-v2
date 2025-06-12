@@ -9,10 +9,7 @@ export default defineConfig({
 			$lib: '/src/lib'
 		}
 	},
-  server:{
-    allowedHosts:[
-      "idontcare.ovh",
-      "funlab.dedyn.io"
-    ]
-  }
+	server: {
+		allowedHosts: ['idontcare.ovh', 'funlab.dedyn.io']
+	}
 });

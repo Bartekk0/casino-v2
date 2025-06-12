@@ -74,6 +74,9 @@
 	<form method="POST" action="/auth/signin/github">
 		<button type="submit">gitbuh</button>
 	</form>
+	<form method="POST" action="/auth/signin/google">
+		<button type="submit">a</button>
+	</form>
 
 	<form method="POST" action="/auth/signout">
 		<button type="submit">Wyloguj</button>

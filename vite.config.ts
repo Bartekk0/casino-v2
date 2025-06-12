@@ -12,4 +12,10 @@ export default defineConfig({
   //     cert: fs.readFileSync(path.resolve('./certs/localhost.pem'))
   //   }
   // }
+  server:{
+    allowedHosts:[
+      "idontcare.ovh",
+      "funlab.dedyn.io"
+    ]
+  }
 });

@@ -6,17 +6,31 @@ import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
+import type { Adapter } from '@auth/core/adapters';
 import { randomUUID } from 'crypto';
 
 class InvalidLoginError extends CredentialsSignin {
 	code = 'Invalid identifier or password';
 }
 
+const baseAdapter = PostgresAdapter(pool) as Adapter;
+
+export const customAdapter: Adapter = {
+	...baseAdapter,
+	async linkAccount(account) {
+		console.log('Zablokowano automatyczne łączenie kont', account);
+		return;
+	}
+};
+
 export const auth = SvelteKitAuth({
-	adapter: PostgresAdapter(pool),
+	adapter: customAdapter,
 	secret: process.env.AUTH_SECRET,
 	trustHost: true,
+	pages: {
+		signIn: "/signin",
 
+	},
 	providers: [
 		GitHub({
 			clientId: process.env.AUTH_GITHUB_ID!,

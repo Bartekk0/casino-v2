@@ -21,7 +21,7 @@ export async function load({ locals }) {
 		]);
 
 		if (res.rowCount === 0) {
-			throw redirect(302, '/konto/portfel');
+			throw redirect(302, '/profile/wallet');
 		}
 
 		const balance = res.rows[0].balance_cents / 100;

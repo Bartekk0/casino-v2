@@ -37,11 +37,6 @@
 		</div>
 		<div class="flex items-center space-x-6">
 			{#if !isLoggedIn}
-				{#if page.data.walletExists}
-					Masz saldo: {page.data.balance?.toFixed(2)} PLN
-				{:else}
-					<a href="/konto/brak-portfela">Nie masz portfela, kliknij tutaj, aby go utworzyć</a>
-				{/if}
 				<a
 					href="/auth/signin"
 					class="text-lg transition hover:text-yellow-400"
@@ -54,11 +49,21 @@
 					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
 				>
 			{:else}
-				<a
-					href="/profile/wallet"
-					class="text-lg transition hover:text-yellow-400"
-					class:text-yellow-400={page.url.pathname === '/profile/wallet'}>WALLET</a
-				>
+				{#if page.data.walletExists}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-yellow-400"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}
+						>{page.data.balance?.toFixed(2)}$</a
+					>
+				{:else}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-red-500"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}>CREATE WALLET</a
+					>
+				{/if}
+
 				<a
 					href="/auth/signout"
 					class="text-lg transition hover:text-yellow-400"

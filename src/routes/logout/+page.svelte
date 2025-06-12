@@ -22,7 +22,7 @@
 			</div>
 			<button
 				type="submit"
-				class="w-full rounded-full bg-transparent px-4 py-2 font-bold text-white transition hover:bg-white hover:text-black"
+				class="w-full cursor-pointer rounded-full bg-transparent px-4 py-2 font-bold text-white transition hover:bg-white hover:text-black"
 			>
 				Logout
 			</button>

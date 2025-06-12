@@ -9,12 +9,7 @@
 	<title>Casino</title>
 </svelte:head>
 
-<div
-	class="h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat text-white select-none"
-	style="
-			background-image: url('/main_page/bg.jpg');
-		"
->
+<div class="relative h-full min-h-screen w-full overflow-auto text-white select-none">
 	<nav
 		class="absolute top-0 right-0 left-0 z-10 container mx-auto flex items-center justify-between p-6"
 	>
@@ -82,3 +77,10 @@
 		{@render children()}
 	</main>
 </div>
+
+<style>
+	:global(body) {
+		@apply h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat;
+		background-image: url('/main_page/bg.jpg');
+	}
+</style>

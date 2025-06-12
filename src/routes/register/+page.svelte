@@ -133,7 +133,7 @@
 	<div class="mt-4 text-center text-white">
 		<p>
 			Already have an account?
-			<a href="/login" class="text-white underline">Login here</a>
+			<a href="/auth/signin" class="text-white underline">Login here</a>
 		</p>
 	</div>
 </div>

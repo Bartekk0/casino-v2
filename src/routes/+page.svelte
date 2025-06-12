@@ -1,5 +1,6 @@
 <script>
-	let isLoggedIn = true;
+	import { page } from '$app/state';
+	let isLoggedIn = page.data.session && page.data.session.user;
 </script>
 
 <div class="mb-12">
@@ -23,7 +24,7 @@
 	{:else}
 		<a
 			class="transform rounded-full bg-yellow-500 px-12 py-4 text-xl font-bold text-gray-900 transition hover:bg-yellow-600"
-			href="/login"
+			href="/auth/signin"
 		>
 			JOIN NOW
 		</a>

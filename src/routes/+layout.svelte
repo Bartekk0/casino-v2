@@ -2,7 +2,7 @@
 	import '../app.css';
 	let { children } = $props();
 	import { page } from '$app/state';
-	let isLoggedIn = true;
+	let isLoggedIn = page.data.session && page.data.session.user;
 </script>
 
 <svelte:head>
@@ -43,7 +43,7 @@
 		<div class="flex items-center space-x-6">
 			{#if !isLoggedIn}
 				<a
-					href="/login"
+					href="/auth/signin"
 					class="text-lg transition hover:text-yellow-400"
 					class:text-yellow-400={page.url.pathname === '/login'}
 					>{isLoggedIn ? 'LOGOUT' : 'LOGIN'}</a
@@ -54,8 +54,16 @@
 					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
 				>
 			{:else}
-				<a href="/profile/wallet" class="text-lg transition hover:text-yellow-400">WALLET</a>
-				<a href="/auth/signout" class="text-lg transition hover:text-yellow-400">LOGOUT</a>
+				<a
+					href="/profile/wallet"
+					class="text-lg transition hover:text-yellow-400"
+					class:text-yellow-400={page.url.pathname === '/profile/wallet'}>WALLET</a
+				>
+				<a
+					href="/auth/signout"
+					class="text-lg transition hover:text-yellow-400"
+					class:text-yellow-400={page.url.pathname === '/logout'}>LOGOUT</a
+				>
 			{/if}
 		</div>
 

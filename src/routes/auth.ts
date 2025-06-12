@@ -93,6 +93,10 @@ const getUserFromDb = async (email: string, password: string) => {
 export const { handle, signIn, signOut } = SvelteKitAuth(async (event) => {
 	const authOptions = {
 		adapter: PostgresAdapter(pool),
+		pages: {
+			signIn: '/login',
+			signOut: '/logout'
+		},
 		providers: [
 			// GitHub({
 			// 	clientId: process.env.AUTH_GITHUB_ID ?? '',

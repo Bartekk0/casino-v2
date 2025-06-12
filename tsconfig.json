@@ -4,8 +4,8 @@
 		"baseUrl": "./",
 		"paths": {
 			"@/*": ["src/*"],
-			"$lib": ["src/lib"],
-			"$utils": ["src/utils"]
+			"$lib/*": ["src/lib/*"],
+			"$utils/*": ["src/utils/*"]
 		},
 		"allowJs": true,
 		"checkJs": true,

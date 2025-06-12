@@ -9,6 +9,7 @@ Casino V2 is a web-based casino application built with SvelteKit. It features va
 - **Wallet**: Create wallet, deposit funds.
   
 ## Installation
+(Note that the app will not work fully as the database is external - logging in won't work without it. Also for authJs to work you need to generate an auth secret, and for providers to work a respective auth ID and auth Secret are needed)
 
 1. Clone the repository:
 

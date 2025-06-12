@@ -16,7 +16,7 @@
 		"
 >
 	<nav
-		class="absolute top-0 right-0 left-0 container mx-auto flex items-center justify-between p-6"
+		class="absolute top-0 right-0 left-0 z-10 container mx-auto flex items-center justify-between p-6"
 	>
 		<div class="hidden space-x-12 md:flex">
 			<a

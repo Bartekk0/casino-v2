@@ -53,12 +53,12 @@
 			const data = await res.json();
 
 			if (!res.ok) {
-				error = data.error || 'Coś poszło nie tak';
+				error = data.error || 'Something went wrong';
 			} else {
 				submitted = true;
 			}
 		} catch (err) {
-			error = 'Błąd połączenia z serwerem';
+			error = 'Server connection error';
 		}
 	}
 </script>

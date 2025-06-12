@@ -2,13 +2,13 @@
   export let card: { value: string; suit: string };
   
   const suitSymbols: any = {
-    'H': '♥',
-    'D': '♦',
-    'C': '♣',
-    'S': '♠'
+    'hearts': '♥',
+    'diamonds': '♦',
+    'clubs': '♣',
+    'spades': '♠'
   };
   
-  const redSuits = ['H', 'D'];
+  const redSuits = ['hearts', 'diamonds'];
   const isRed = redSuits.includes(card.suit);
 </script>
 

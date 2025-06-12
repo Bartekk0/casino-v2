@@ -113,7 +113,11 @@
 				type="submit"
 				class="group align-center flex w-full justify-center gap-2 rounded-full border border-white/30 bg-transparent px-4 py-2 font-bold text-white transition hover:bg-white hover:text-black"
 			>
-				<img src="/login/github.png" alt="github" class="h-6 w-6 transition group-hover:invert" />
+				<img
+					src="/login/google-logo.png"
+					alt="github"
+					class="h-6 w-6 transition group-hover:invert"
+				/>
 				Sign in with Google
 			</button>
 		</form>
@@ -128,11 +132,7 @@
 				type="submit"
 				class="group align-center flex w-full justify-center gap-2 rounded-full border border-white/30 bg-transparent px-4 py-2 font-bold text-white transition hover:bg-white hover:text-black"
 			>
-				<img
-					src="/login/google-logo.png"
-					alt="github"
-					class="h-6 w-6 transition group-hover:invert"
-				/>
+				<img src="/login/github.png" alt="github" class="h-6 w-6 transition group-hover:invert" />
 				Sign in with GitHub
 			</button>
 		</form>

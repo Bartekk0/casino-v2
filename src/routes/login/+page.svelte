@@ -27,7 +27,7 @@
 
 <div class="mx-auto mt-12 flex max-w-xl flex-col rounded-full bg-transparent p-8 shadow-lg">
 	{#if step === 1}
-		<h1 class="mb-6 text-center text-3xl font-bold text-white" style=";">Login to Casino</h1>
+		<h1 class="mb-6 text-center text-3xl font-bold text-white">Login to Casino</h1>
 	{:else}
 		<button
 			type="button"

@@ -1,14 +1,32 @@
 [
 	{
-		"name": "Game 1",
-		"href": "/game1",
-		"image": "",
-		"desc": "This is a description of Game 1."
+		"name": "Plinko",
+		"href": "plinko",
+		"image": "balls.png",
+		"desc": "Drop chips and win prizes in the classic Plinko game."
 	},
 	{
-		"name": "Plinko",
-		"href": "/plinko",
-		"image": "",
-		"desc": "Drop chips and win prizes in the classic Plinko game."
+		"name": "Roullette",
+		"href": "roullette",
+		"image": "roulette.png",
+		"desc": "Spin the wheel and bet on your lucky numbers in Roullette."
+	},
+	{
+		"name": "Blackjack",
+		"href": "blackjack",
+		"image": "cards.png",
+		"desc": "Try to beat the dealer in the classic card game of Blackjack."
+	},
+	{
+		"name": "Slots",
+		"href": "slots",
+		"image": "slot-machine.png",
+		"desc": "Spin the reels and test your luck in the Slots game."
+	},
+	{
+		"name": "Mines",
+		"href": "mines",
+		"image": "mines.png",
+		"desc": "Avoid the mines and uncover prizes in this thrilling game."
 	}
 ]

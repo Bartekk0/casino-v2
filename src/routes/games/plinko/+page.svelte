@@ -38,9 +38,24 @@
 				credits: 0
 			}
 		].reverse(),
-		MULITIPLIERS = [1, 2, 3, 4, 5],
+		MULTIPLIERS = [1, 2, 3, 4, 5],
 		DEFAULT_BALL_COST = 5;
 
+	function dropBallHandler() {
+		if (credits < DEFAULT_BALL_COST * multiplier) {
+			return;
+		}
+		credits -= DEFAULT_BALL_COST * multiplier;
+		const start = WIDTH / 2 - PEG_SPACING;
+		const stop = WIDTH / 2 + PEG_SPACING;
+		const randomX = Math.random() * (stop - start) + start;
+		const ball = Matter.Bodies.circle(randomX, 50, BALL_RADIUS, {
+			restitution: 0.8,
+			render: { fillStyle: COLORS[Math.floor(Math.random() * COLORS.length)] },
+			label: 'ball-' + multiplier
+		});
+		Matter.World.add(engine.world, ball);
+	}
 	onMount(() => {
 		engine = Matter.Engine.create();
 		engine.gravity.y = 1;
@@ -114,21 +129,6 @@
 		const runner = Matter.Runner.create();
 		Matter.Runner.run(runner, engine);
 		Matter.Render.run(render);
-		const start = WIDTH / 2 - PEG_SPACING;
-		const stop = WIDTH / 2 + PEG_SPACING;
-		document.querySelector('#drop-ball-button')?.addEventListener('click', () => {
-			if (credits < DEFAULT_BALL_COST * multiplier) {
-				return;
-			}
-			credits -= DEFAULT_BALL_COST * multiplier;
-			const randomX = Math.random() * (stop - start) + start;
-			const ball = Matter.Bodies.circle(randomX, 50, BALL_RADIUS, {
-				restitution: 0.8,
-				render: { fillStyle: COLORS[Math.floor(Math.random() * COLORS.length)] },
-				label: 'ball-' + multiplier
-			});
-			Matter.World.add(engine.world, ball);
-		});
 
 		Matter.Events.on(engine, 'collisionStart', (event) => {
 			event.pairs.forEach((pair) => {
@@ -178,6 +178,7 @@
 
 	<button
 		id="drop-ball-button"
+		on:click={() => dropBallHandler()}
 		class="mt-2 rounded-full bg-yellow-600 px-4 py-2 text-white transition hover:bg-yellow-700 disabled:cursor-not-allowed disabled:bg-gray-500"
 	>
 		Drop a ball ({DEFAULT_BALL_COST * multiplier}$)
@@ -202,7 +203,7 @@
 			class="overflow-hidden rounded-md border-2 border-white shadow-lg"
 		></div>
 		<div class="mt-4 flex flex-col gap-2">
-			{#each MULITIPLIERS as m}
+			{#each MULTIPLIERS as m}
 				<button
 					class="flex w-16 cursor-pointer flex-col items-center"
 					on:click={() => (multiplier = m)}

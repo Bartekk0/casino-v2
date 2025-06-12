@@ -16,7 +16,6 @@ export const auth = SvelteKitAuth({
 	adapter: PostgresAdapter(pool),
 	secret: process.env.AUTH_SECRET,
 	trustHost: true,
-	debug: true,
 
 	providers: [
 		GitHub({

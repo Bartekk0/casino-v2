@@ -30,13 +30,13 @@
 		});
 
 		const result = await res.json();
-		loading = false;
 
 		if (res.ok) {
 			message = `Doładowano ${amountToAdd.toFixed(2)} zł!`;
 			setTimeout(() => location.reload(), 1000);
 		} else {
 			message = result.error || 'Wystąpił błąd przy wpłacie.';
+			loading = false;
 		}
 	}
 </script>
@@ -150,6 +150,7 @@
 		font-weight: bold;
 		color: #27ae60;
 	}
+
 	.quick-amounts {
 		display: flex;
 		flex-wrap: wrap;
@@ -158,23 +159,18 @@
 	}
 
 	.quick-amounts button {
-		background-color: #e0f2fe; /* blue-100 */
-		color: #2563eb; /* blue-600 */
+		background-color: #dbeafe; /* blue-100 */
+		color: #3b82f6; /* blue-500 */
 		border: 1px solid #bfdbfe; /* blue-200 */
-		border-radius: 0.5rem;
-		padding: 0.5rem 1rem;
+		border-radius: 0.75rem;
+		padding: 0.4rem 1rem;
 		font-weight: 500;
 		font-size: 0.9rem;
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: background-color 0.2s ease;
 	}
 
 	.quick-amounts button:hover {
-		background-color: #bae6fd; /* blue-200 */
-	}
-
-	.quick-amounts button:hover {
-		background-color: #e0e0e0;
-		border-color: #999;
+		background-color: #bfdbfe; /* blue-200 */
 	}
 </style>

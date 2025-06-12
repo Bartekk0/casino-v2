@@ -139,11 +139,14 @@
 			{/if}
 		</form>
 	{/if}
-	<div class="mt-4 text-center text-white">
-		<p>
-			Already have an account?
-			<br />
-			<a href="/auth/signin" class="text-white underline">Login here</a>
-		</p>
-	</div>
+
+	{#if step === 1}
+		<div class="mt-4 text-center text-white">
+			<p>
+				Already have an account?
+				<br />
+				<a href="/auth/signin" class="text-white underline">Login here</a>
+			</p>
+		</div>
+	{/if}
 </div>

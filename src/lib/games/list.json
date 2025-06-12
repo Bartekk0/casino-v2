@@ -28,5 +28,11 @@
 		"href": "mines",
 		"image": "mines.png",
 		"desc": "Avoid the mines and uncover prizes in this thrilling game."
+	},
+	{
+		"name": "Chance",
+		"href": "test",
+		"image": "roulette.png",
+		"desc": "YYYYYYYYYYY emmm yyyy eeer eee rerr"
 	}
 ]

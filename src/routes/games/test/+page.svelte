@@ -112,33 +112,47 @@
 
 <style>
 	main {
-		max-width: 400px;
+		max-width: 600px;
 		margin: 3rem auto;
-		font-family: Arial, sans-serif;
-		background: #f5f5f5;
-		padding: 2rem;
-		border-radius: 12px;
-		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		background: #121212;
+		padding: 2.5rem;
+		border-radius: 16px;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 		text-align: center;
+		color: #ffffff;
 	}
 
 	h1 {
-		margin-bottom: 1rem;
-		color: #2c3e50;
+		margin-bottom: 1.5rem;
+		color: #f1c40f;
+		font-size: 2rem;
+	}
+
+	.balance {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin-bottom: 1.5rem;
+		color: #f1c40f;
+	}
+
+	.options {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		text-align: left;
+		margin-bottom: 2rem;
 	}
 
 	label {
-		display: block;
-		margin: 1rem 0 0.5rem;
 		font-weight: 600;
-		color: #34495e;
+		color: #ffffff;
+		margin-bottom: 0.2rem;
 	}
 
 	input[type='range'] {
 		width: 100%;
-		margin-bottom: 0.3rem;
-		-webkit-appearance: none;
-		height: 12px;
+		height: 14px;
 		border-radius: 8px;
 		background: var(--slider-bg);
 		cursor: pointer;
@@ -147,104 +161,85 @@
 
 	input[type='range']::-webkit-slider-thumb {
 		-webkit-appearance: none;
-		appearance: none;
-		width: 24px;
-		height: 24px;
-		background: #2ecc71;
-		cursor: pointer;
+		width: 20px;
+		height: 20px;
+		background: #ffffff;
 		border-radius: 50%;
-		border: 2px solid #27ae60;
-		margin-top: -6px;
-		transition: background-color 0.3s;
-	}
-	input[type='range']:active::-webkit-slider-thumb {
-		background-color: #27ae60;
+		border: 2px solid #bdc3c7;
 	}
 
-	input[type='range']::-moz-range-thumb {
-		width: 24px;
-		height: 24px;
-		background: #2ecc71;
-		cursor: pointer;
-		border-radius: 50%;
-		border: 2px solid #27ae60;
-		transition: background-color 0.3s;
-	}
-	input[type='range']:active::-moz-range-thumb {
-		background-color: #27ae60;
+	input[type='range']:active::-webkit-slider-thumb {
+		background-color: #ecf0f1;
 	}
 
 	input[type='number'] {
 		width: 100%;
-		padding: 0.4rem;
+		padding: 0.6rem;
 		font-size: 1rem;
-		border-radius: 6px;
-		border: 1px solid #ccc;
+		border-radius: 8px;
+		border: 1px solid #555;
+		background: #1e1e1e;
+		color: #fff;
 		box-sizing: border-box;
 	}
 
-	button {
-		background: #27ae60;
-		color: white;
-		border: none;
-		padding: 1rem 2rem;
-		margin-top: 1.5rem;
-		font-size: 1.1rem;
-		border-radius: 8px;
-		cursor: pointer;
-		box-shadow: 0 4px 10px #2ecc71;
-		transition: background-color 0.3s ease;
-		width: 100%;
-	}
-	button:disabled {
-		background: #95a5a6;
-		cursor: not-allowed;
-		box-shadow: none;
-	}
-	button:hover:not(:disabled) {
-		background: #2ecc71;
-	}
-
-	.info {
-		margin-top: 1.2rem;
-		font-size: 1.2rem;
-		font-weight: 700;
-		color: #34495e;
-		line-height: 1.6;
-	}
-
-	.balance {
-		font-size: 1.4rem;
-		font-weight: 800;
-		margin-bottom: 1rem;
-		color: #2980b9;
-	}
-
-	.options {
-		text-align: left;
-	}
-
-	.multiplier {
-		margin-top: 0.5rem;
-		font-size: 1.3rem;
-		font-weight: 700;
-		color: #27ae60;
-	}
-
-	label.checkbox-label {
-		cursor: pointer;
-		user-select: none;
+	.checkbox-label {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.6rem;
 		font-weight: 600;
-		color: #34495e;
-		margin-top: 0.7rem;
+		color: #ffffff;
+		margin-top: 0.5rem;
+		cursor: pointer;
+		user-select: none;
 	}
 
-	label.checkbox-label input[type='checkbox'] {
+	.checkbox-label input[type='checkbox'] {
 		width: 18px;
 		height: 18px;
 		cursor: pointer;
+		accent-color: #f1c40f;
+	}
+
+	.multiplier {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: #f1c40f;
+	}
+
+	button {
+		background: #f1c40f;
+		color: #000;
+		border: none;
+		padding: 1rem;
+		font-size: 1.2rem;
+		border-radius: 10px;
+		cursor: pointer;
+		width: 100%;
+		transition: background-color 0.3s ease, transform 0.1s;
+		box-shadow: 0 6px 12px rgba(241, 196, 15, 0.4);
+	}
+	button:hover:not(:disabled) {
+		background: #ffd700;
+		transform: scale(1.02);
+	}
+	button:disabled {
+		background: #555;
+		color: #ccc;
+		cursor: not-allowed;
+		box-shadow: none;
+	}
+
+	.info {
+		margin-top: 1.5rem;
+		background: #1f1f1f;
+		padding: 1rem;
+		border-radius: 10px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: #ffffff;
+		line-height: 1.5;
+		box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
 	}
 </style>
+

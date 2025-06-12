@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+
+.left-center {
+	@apply absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 transform;
+}

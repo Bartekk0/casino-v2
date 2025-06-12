@@ -6,7 +6,7 @@ import PostgresAdapter from '@auth/pg-adapter';
 import { pool } from '../../utils/db';
 import { comparePasswords } from '../../utils/password';
 import { getUserByEmail } from '../../utils/user';
-import type { Adapter } from '@auth/core/adapters';
+import type { Adapter } from '@auth/core/Adapter';
 import { randomUUID } from 'crypto';
 
 class InvalidLoginError extends CredentialsSignin {

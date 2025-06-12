@@ -105,7 +105,7 @@
 		<div class="info">
 			<div>{message}</div>
 			<div>Rzut: {roll}</div>
-			<div>Profit: {win ? formatMoney(payout-stake) + ' zł' : '-'}</div>
+			<div>Payout: {win ? formatMoney(payout) + ' zł' : '-'}</div>
 		</div>
 	{/if}
 </main>

@@ -48,7 +48,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     const win = rollAbove ? roll >= chance : roll <= chance;
 
     // Mnożnik wygranej (uwzględnia house edge 1%)
-    const multiplier = win ? Math.floor((100 / chance) * 0.99 * 100) / 100 : 0;
+    const actualChance = rollAbove ? 100 - chance + 1 : chance;
+    const multiplier = win ? Math.floor((100 / actualChance) * 0.99 * 100) / 100 : 0;
 
     const payout = win ? Math.floor(stake * multiplier) : 0;
 

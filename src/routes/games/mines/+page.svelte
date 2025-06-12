@@ -113,17 +113,30 @@
 	}
 </script>
 
-<div class:loading={loading}>
+<div class:loading>
 	<p>Balance: {balance.toFixed(2)}</p>
-	<label>
-		Bombs:
-		<input type="number" bind:value={bombCount} min="1" max="24" disabled={!gameOver || loading} />
-	</label>
-	<p></p>
-	<label>
-		Stake:
-		<input type="number" bind:value={stake} min="1" max={balance} disabled={!gameOver || loading} />
-	</label>
+	<div class="inputs">
+		<div class="input-group">
+			<label>Bombs</label>
+			<input
+				type="number"
+				bind:value={bombCount}
+				min="1"
+				max="24"
+				disabled={!gameOver || loading}
+			/>
+		</div>
+		<div class="input-group">
+			<label>Stake</label>
+			<input
+				type="number"
+				bind:value={stake}
+				min="1"
+				max={balance}
+				disabled={!gameOver || loading}
+			/>
+		</div>
+	</div>
 
 	<div class="grid">
 		{#each Array(25) as _, i}
@@ -157,61 +170,130 @@
 </div>
 
 <style>
+	:global(body) {
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		background: #f2f4f7;
+		color: #333;
+		margin: 0;
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+	}
+
+	p {
+		font-size: 1.8rem;
+		font-weight: bold;
+		margin-bottom: 1rem;
+	}
+
+	.inputs {
+		display: flex;
+		justify-content: center;
+		gap: 2rem;
+		margin-bottom: 1rem;
+	}
+
+	.input-group {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.input-group label {
+		font-size: 1.2rem;
+		margin-bottom: 0.5rem;
+		font-weight: 600;
+	}
+
+	input[type='number'] {
+		width: 100px;
+		padding: 0.5rem 0.75rem;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		font-size: 1.2rem;
+		text-align: center;
+		outline: none;
+		transition: border 0.2s;
+	}
+
+	input[type='number']:focus {
+		border-color: #4caf50;
+	}
+
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(5, 60px);
-		gap: 4px;
-		margin: 1rem 0;
+		grid-template-columns: repeat(5, 90px);
+		gap: 8px;
+		margin: 1.5rem 0;
 	}
+
 	.cell {
-		width: 60px;
-		height: 60px;
-		background: #ccc;
+		width: 90px;
+		height: 90px;
+		background: #ddd;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		border-radius: 12px;
 		cursor: pointer;
 		font-weight: bold;
-		transition: background-color 0.3s;
+		font-size: 1.3rem;
+		border: 2px solid transparent;
+		transition: all 0.2s ease;
 	}
+
 	.cell:hover {
-		box-shadow: 1px 1px 5px black;
+		border-color: #888;
+		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 	}
+
 	.revealed {
-		background: #aaffaa;
-		color: green;
+		background: #d4f8d4;
+		color: #2e7d32;
 	}
+
 	.bomb {
-		background: #ff6666;
+		background: #ff4d4d;
 		color: white;
 	}
+
 	.multiplier {
-		color: green;
-		font-size: 0.9rem;
+		color: #388e3c;
+		font-size: 1rem;
 		font-weight: bold;
 	}
+
+	.controls {
+		display: flex;
+		justify-content: center;
+		margin-top: 1rem;
+		gap: 1rem;
+	}
+
 	.startbutton,
 	.cashout {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: fit-content;
-
-		padding: 15px;
-		height: 45px;
-		border: 2px solid green;
-		background: greenyellow;
-		color: green;
-		font-weight: 900;
+		padding: 1rem 2rem;
+		font-size: 1.2rem;
+		border-radius: 10px;
+		border: none;
+		background: linear-gradient(to right, #a2ff86, #70db70);
+		color: #044d00;
+		font-weight: bold;
 		cursor: pointer;
-		transition: background-color 0.3s;
+		transition: background 0.3s;
 	}
+
 	.startbutton:hover,
 	.cashout:hover {
-		background: lightgreen;
+		background: linear-gradient(to right, #90ee90, #57c457);
 	}
-	.startbutton:active,
-	.cashout:active {
-		background: #aaffaa;
-	}
+
+	/*.startbutton:disabled,
+	 .cashout:disabled {
+		background: #ccc;
+		color: #666;
+		cursor: not-allowed;
+	} */ 
 </style>

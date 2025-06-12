@@ -45,7 +45,7 @@
 		const data = await res.json();
 		loading = false;
 		if (!res.ok) {
-			alert(data.error || 'Błąd serwera');
+			alert(data.error || 'Server error');
 			return;
 		}
 		roll = data.roll;
@@ -53,16 +53,16 @@
 		payout = data.payout;
 		balance = data.balance;
 
-		message = win ? `Wygrałeś!` : `Przegrałeś! Spróbuj ponownie.`;
+		message = win ? `You Won!` : `You Lost! Try again`;
 	}
 </script>
 
 <main>
-	<h1>Prosta Gra Hazardowa</h1>
-	<div class="balance">Saldo: {formatMoney(balance)} zł</div>
+	<h1>Chance</h1>
+	<div class="balance">Balance: {formatMoney(balance)}</div>
 
 	<div class="options">
-		<label for="chanceRange">Wybrana liczba: {chance}</label>
+		<label for="chanceRange">Your number: {chance}</label>
 		<input
 			type="range"
 			id="chanceRange"
@@ -70,22 +70,24 @@
 			max={rollAbove ? 100 : 98}
 			bind:value={chance}
 			disabled={loading}
-			style="--slider-bg: {rollAbove
-				? `linear-gradient(to right, #e74c3c 0%, #e74c3c ${chance}%, #2ecc71 ${chance}%, #2ecc71 100%)`
-				: `linear-gradient(to right, #2ecc71 0%, #2ecc71 ${chance}%, #e74c3c ${chance}%, #e74c3c 100%)`}"
+			style="
+		background: {rollAbove
+				? `linear-gradient(to right, #e74c3c 0%, #e74c3c ${chance}%, #f1c40f ${chance}%, #f1c40f 100%)`
+				: `linear-gradient(to right, #f1c40f 0%, #f1c40f ${chance}%, #e74c3c ${chance}%, #e74c3c 100%)`};
+	"
 		/>
 
 		<label class="checkbox-label">
 			<input type="checkbox" bind:checked={rollAbove} disabled={loading} on:change={() => {}} />
-			{rollAbove ? 'Wyżej (≥)' : 'Niżej (≤)'}
+			{rollAbove ? 'Higher (≥)' : 'Lower (≤)'}
 		</label>
 
 		<div class="multiplier">
-			Szansa: {displayChance}%<br />
-			Mnożnik: x{Math.floor(multiplier*100)/100}
+			Chance: {displayChance}%<br />
+			Multiplier: x{Math.floor(multiplier * 100) / 100}
 		</div>
 
-		<label for="stakeInput">Kwota zakładu (zł):</label>
+		<label for="stakeInput">Stake :</label>
 		<input
 			type="number"
 			id="stakeInput"
@@ -98,85 +100,107 @@
 	</div>
 
 	<button on:click={startGame} disabled={loading || stake > balance || stake <= 0}>
-		{loading ? 'Losuję...' : 'Zagraj'}
+		{loading ? 'Pending...' : 'Play'}
 	</button>
 
 	{#if message}
 		<div class="info">
 			<div>{message}</div>
-			<div>Rzut: {roll}</div>
-			<div>Payout: {win ? formatMoney(payout) + ' zł' : '-'}</div>
+			<div>Number: {roll}</div>
+			<div>Payout: {win ? formatMoney(payout) : '0'}</div>
 		</div>
 	{/if}
 </main>
 
 <style>
 	main {
-		max-width: 600px;
+		width: 600px;
+		max-width: 1080px;
 		margin: 3rem auto;
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		background: #121212;
-		padding: 2.5rem;
+		background: #000;
+		padding: 3rem;
 		border-radius: 16px;
 		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 		text-align: center;
-		color: #ffffff;
+		color: #fff;
 	}
 
 	h1 {
-		margin-bottom: 1.5rem;
+		margin-bottom: 2rem;
 		color: #f1c40f;
-		font-size: 2rem;
+		font-size: 2.4rem;
 	}
 
 	.balance {
-		font-size: 1.5rem;
+		font-size: 1.7rem;
 		font-weight: 700;
-		margin-bottom: 1.5rem;
+		margin-bottom: 2rem;
 		color: #f1c40f;
 	}
 
 	.options {
 		display: flex;
 		flex-direction: column;
-		gap: 1.2rem;
+		gap: 1.5rem;
 		text-align: left;
 		margin-bottom: 2rem;
+		width: 100%;
 	}
 
 	label {
 		font-weight: 600;
-		color: #ffffff;
-		margin-bottom: 0.2rem;
+		color: #fff;
+		font-size: 1.15rem;
 	}
 
 	input[type='range'] {
 		width: 100%;
-		height: 14px;
+		height: 16px;
 		border-radius: 8px;
-		background: var(--slider-bg);
 		cursor: pointer;
-		transition: background 0.3s ease;
+		background: transparent;
+		-webkit-appearance: none;
 	}
 
 	input[type='range']::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		width: 20px;
 		height: 20px;
-		background: #ffffff;
+		background: #fff;
+		border: 2px solid #f1c40f;
 		border-radius: 50%;
-		border: 2px solid #bdc3c7;
+		margin-top: -7px;
+		position: relative;
+		z-index: 2;
 	}
 
-	input[type='range']:active::-webkit-slider-thumb {
-		background-color: #ecf0f1;
+	input[type='range']::-webkit-slider-runnable-track {
+		height: 6px;
+		border-radius: 8px;
+		background: linear-gradient(to right, #f1c40f 0%, #f1c40f var(--progress), #e74c3c var(--progress), #e74c3c 100%);
+	}
+
+	input[type='range']::-moz-range-thumb {
+		width: 20px;
+		height: 20px;
+		background: #fff;
+		border: 2px solid #f1c40f;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+
+	input[type='range']::-moz-range-track {
+		height: 6px;
+		border-radius: 8px;
+		background: linear-gradient(to right, #f1c40f 0%, #f1c40f var(--progress), #e74c3c var(--progress), #e74c3c 100%);
 	}
 
 	input[type='number'] {
 		width: 100%;
-		padding: 0.6rem;
-		font-size: 1rem;
-		border-radius: 8px;
+		padding: 0.8rem;
+		font-size: 1.1rem;
+		border-radius: 10px;
 		border: 1px solid #555;
 		background: #1e1e1e;
 		color: #fff;
@@ -188,10 +212,11 @@
 		align-items: center;
 		gap: 0.6rem;
 		font-weight: 600;
-		color: #ffffff;
+		color: #fff;
 		margin-top: 0.5rem;
 		cursor: pointer;
 		user-select: none;
+		font-size: 1.05rem;
 	}
 
 	.checkbox-label input[type='checkbox'] {
@@ -202,7 +227,7 @@
 	}
 
 	.multiplier {
-		font-size: 1.2rem;
+		font-size: 1.3rem;
 		font-weight: 700;
 		color: #f1c40f;
 	}
@@ -211,12 +236,14 @@
 		background: #f1c40f;
 		color: #000;
 		border: none;
-		padding: 1rem;
-		font-size: 1.2rem;
-		border-radius: 10px;
+		padding: 1.1rem;
+		font-size: 1.3rem;
+		border-radius: 12px;
 		cursor: pointer;
 		width: 100%;
-		transition: background-color 0.3s ease, transform 0.1s;
+		transition:
+			background-color 0.3s ease,
+			transform 0.1s;
 		box-shadow: 0 6px 12px rgba(241, 196, 15, 0.4);
 	}
 	button:hover:not(:disabled) {
@@ -231,14 +258,14 @@
 	}
 
 	.info {
-		margin-top: 1.5rem;
+		margin-top: 2rem;
 		background: #1f1f1f;
-		padding: 1rem;
-		border-radius: 10px;
-		font-size: 1.1rem;
+		padding: 1.2rem;
+		border-radius: 12px;
+		font-size: 1.15rem;
 		font-weight: 600;
 		color: #ffffff;
-		line-height: 1.5;
+		line-height: 1.6;
 		box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
 	}
 </style>

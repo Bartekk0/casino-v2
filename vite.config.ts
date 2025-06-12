@@ -5,11 +5,10 @@ import fs from 'fs';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [tailwindcss(), sveltekit()],
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(path.resolve('./certs/localhost-key.pem')),
-  //     cert: fs.readFileSync(path.resolve('./certs/localhost.pem'))
-  //   }
-  // }
+	plugins: [tailwindcss(), sveltekit()],
+	resolve: {
+		alias: {
+			$lib: '/src/lib'
+		}
+	}
 });

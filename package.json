@@ -26,7 +26,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
-		"tailwindcss": "^4.0.0",
+		"tailwindcss": "^4.1.9",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.8.3",
 		"vite": "^6.0.0"
@@ -34,8 +34,10 @@
 	"dependencies": {
 		"@auth/pg-adapter": "^1.8.0",
 		"@auth/sveltekit": "^1.8.0",
+		"autoprefixer": "^10.4.21",
 		"bcrypt": "^5.1.1",
 		"dotenv": "^16.4.7",
-		"pg": "^8.14.1"
+		"pg": "^8.14.1",
+		"postcss": "^8.5.5"
 	}
 }

@@ -82,7 +82,7 @@
 
 		<div class="multiplier">
 			Szansa: {displayChance}%<br />
-			Mnożnik: x{multiplier.toFixed(2)}
+			Mnożnik: x{Math.floor(multiplier*100)/100}
 		</div>
 
 		<label for="stakeInput">Kwota zakładu (zł):</label>

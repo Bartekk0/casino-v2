@@ -1,13 +1,31 @@
 <script lang="ts">
 	let loggingOut = false;
+	let error = '';
 
 	function handleLogout() {
 		loggingOut = true;
-		// Simulate logout delay
-		setTimeout(() => {
-			// Redirect to home or login page after logout
-			window.location.href = '/login';
-		}, 1200);
+		fetch('/auth/signout', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Logout failed');
+				}
+			})
+			.then(() => {
+				setTimeout(() => {
+					window.location.href = '/auth/signin';
+					loggingOut = false;
+				}, 1200);
+			})
+			.catch((error) => {
+				console.error('Error during logout:', error);
+				error = 'Logout failed. Please try again.';
+				loggingOut = false;
+			});
 	}
 </script>
 
@@ -26,6 +44,9 @@
 			>
 				Logout
 			</button>
+			{#if error}
+				<div class="rounded-full bg-transparent p-2 text-center text-red-500">{error}</div>
+			{/if}
 		</form>
 	{/if}
 	<div class="mt-4 text-center text-white">

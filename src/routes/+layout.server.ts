@@ -1,8 +1,10 @@
-import type { LayoutServerLoad } from './$types';
+import { error } from '@sveltejs/kit';
 
-export const load: LayoutServerLoad = async (event) => {
-	const session = await event.locals.auth();
-	return {
-		session
-	};
-};
+export async function load({ locals }) {
+	try {
+		const session = await locals.getSession();
+		return { session };
+	} catch (err) {
+		throw error(500, 'Server error');
+	}
+}

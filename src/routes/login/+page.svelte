@@ -27,7 +27,7 @@
 
 <div class="mx-auto mt-12 flex max-w-xl flex-col rounded-full bg-transparent p-8 shadow-lg">
 	{#if step === 1}
-		<h1 class="mb-6 text-center text-3xl font-bold text-white" style=";">Login to Casino</h1>
+		<h1 class="mb-6 text-center text-3xl font-bold text-white">Login to Casino</h1>
 	{:else}
 		<button
 			type="button"
@@ -45,7 +45,7 @@
 		</button>
 	{/if}
 	{#if submitted}
-		<div class="mb-4 rounded-full bg-transparent p-4 text-center text-white">Logining in...</div>
+		<div class="mb-4 rounded-full bg-transparent p-4 text-center text-white">Logging in...</div>
 	{:else if step === 1}
 		<form class="space-y-6" on:submit|preventDefault={handleEmailSubmit}>
 			{#if error}

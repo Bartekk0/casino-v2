@@ -6,7 +6,7 @@
 
 	function handleSubmit() {
 		submitted = true;
-		console.warn("Don't even think about getting an answer");
+		console.warn("Contact submission not implemented yet");
 	}
 </script>
 

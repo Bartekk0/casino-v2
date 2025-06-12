@@ -17,7 +17,10 @@ export const auth = SvelteKitAuth({
 	secret: process.env.AUTH_SECRET,
 	trustHost: true,
 	debug: true,
-
+	pages: {
+		signIn: '/login',
+		signOut: '/logout'
+	},
 	providers: [
 		GitHub({
 			clientId: process.env.AUTH_GITHUB_ID!,
@@ -51,9 +54,8 @@ export const auth = SvelteKitAuth({
 					id: `${user.id}`,
 					name: user.name ?? null,
 					email: user.email,
-					image: user.image ?? null,
+					image: user.image ?? null
 				};
-
 			}
 		})
 	],

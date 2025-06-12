@@ -1,38 +1,71 @@
-# sv
+# Casino V2
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Casino V2 is a web-based casino application built with SvelteKit. It features various games, user authentication, and a responsive design.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Games**: Includes Mines, Blackjack, Plinko, and more.
+- **Authentication**: Login, registration, and secure user sessions.
+- **Wallet**: Manage balance, deposit, and withdraw funds.
+- **Responsive Design**: Optimized for desktop and mobile devices.
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Installation
 
-# create a new project in my-app
-npx sv create my-app
-```
+1. Clone the repository:
 
-## Developing
+   ```bash
+   git clone https://github.com/your-username/casino-v2.git
+   cd casino-v2
+   ```
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Development
+
+Start the development server:
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Open the app in your browser at [http://localhost:5173](http://localhost:5173).
 
-To create a production version of your app:
+## Building for Production
+
+To create a production build:
 
 ```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+Preview the production build:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+npm run preview
+```
+
+## Folder Structure
+
+- **src/routes**: Contains all the pages and API endpoints.
+- **src/lib**: Shared libraries and utilities.
+- **src/static**: Static assets like images and icons.
+- **src/utils**: Helper functions for database, authentication, and more.
+
+## Games
+
+### Mines
+
+- Click tiles to reveal multipliers.
+- Avoid bombs to keep playing.
+
+### Blackjack
+
+- Play against the dealer.
+- Try to get as close to 21 as possible without going over.
+
+### Plinko
+
+- Drop balls and win based on where they land.

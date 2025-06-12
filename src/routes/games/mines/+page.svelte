@@ -113,187 +113,71 @@
 	}
 </script>
 
-<div class:loading>
-	<p>Balance: {balance.toFixed(2)}</p>
-	<div class="inputs">
-		<div class="input-group">
-			<label>Bombs</label>
+<div class={loading ? 'pointer-events-none' : ''}>
+	<p class="mb-4 text-2xl font-bold">Balance: {balance.toFixed(2)}</p>
+	<div class="mb-4 flex justify-center gap-8">
+		<div class="flex flex-col items-center">
+			<span class="mb-2 text-base font-semibold">Bombs</span>
 			<input
 				type="number"
 				bind:value={bombCount}
 				min="1"
 				max="24"
 				disabled={!gameOver || loading}
+				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base transition outline-none focus:border-yellow-500"
 			/>
 		</div>
-		<div class="input-group">
-			<label>Stake</label>
+		<div class="flex flex-col items-center">
+			<span class="mb-2 text-base font-semibold">Stake</span>
 			<input
 				type="number"
 				bind:value={stake}
 				min="1"
 				max={balance}
 				disabled={!gameOver || loading}
+				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base transition outline-none focus:border-yellow-500"
 			/>
 		</div>
 	</div>
 
-	<div class="grid">
+	<div class="my-6 grid grid-cols-5 justify-center gap-2">
 		{#each Array(25) as _, i}
 			<button
-				class="cell {revealed.has(i) ? 'revealed' : ''} {gameOver && bombs.includes(i)
-					? 'bomb'
-					: ''}"
+				class="flex h-24 w-24 cursor-pointer items-center justify-center rounded-xl border-2 border-transparent bg-gray-300 text-lg font-bold transition-all
+					hover:border-gray-500 hover:shadow-md
+					{revealed.has(i) ? ' bg-yellow-100 text-yellow-800' : ''}
+					{gameOver && bombs.includes(i) ? ' bg-yellow-500 text-white' : ''}"
 				on:click={() => clickCell(i)}
 				disabled={gameOver || loading}
 			>
 				{#if revealed.has(i)}
-					<span class="multiplier">x{individualMultipliers[i].toFixed(2)}</span>
+					<span class="text-base font-bold text-yellow-700"
+						>x{individualMultipliers[i].toFixed(2)}</span
+					>
 				{:else if gameOver && bombs.includes(i)}
-					💣
+					<span class="text-2xl">💣</span>
 				{/if}
 			</button>
 		{/each}
 	</div>
 
-	<div class="controls">
+	<div class="mt-4 flex justify-center gap-4">
 		{#if gameOver}
-			<button class="startbutton" on:click={startGame} disabled={stake > balance || waitStart}>
+			<button
+				class="cursor-pointer rounded-xl border-none bg-gradient-to-r from-yellow-200 to-yellow-400 px-8 py-4 text-lg font-bold text-black transition hover:from-yellow-300 hover:to-yellow-500"
+				on:click={startGame}
+				disabled={stake > balance || waitStart}
+			>
 				Bet {stake ? stake.toFixed(2) : '-'}
 			</button>
 		{:else}
-			<button class="cashout" on:click={cashOut} disabled={loading}
-				>Cash Out {(stake * multiplier).toFixed(2)}</button
+			<button
+				class="cursor-pointer rounded-xl border-none bg-gradient-to-r from-yellow-200 to-yellow-400 px-8 py-4 text-lg font-bold text-black transition hover:from-yellow-300 hover:to-yellow-500"
+				on:click={cashOut}
+				disabled={loading}
 			>
+				Cash Out {(stake * multiplier).toFixed(2)}
+			</button>
 		{/if}
 	</div>
 </div>
-
-<style>
-	:global(body) {
-		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		background: #f2f4f7;
-		color: #333;
-		margin: 0;
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: flex-start;
-	}
-
-	p {
-		font-size: 1.8rem;
-		font-weight: bold;
-		margin-bottom: 1rem;
-	}
-
-	.inputs {
-		display: flex;
-		justify-content: center;
-		gap: 2rem;
-		margin-bottom: 1rem;
-	}
-
-	.input-group {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-	.input-group label {
-		font-size: 1.2rem;
-		margin-bottom: 0.5rem;
-		font-weight: 600;
-	}
-
-	input[type='number'] {
-		width: 100px;
-		padding: 0.5rem 0.75rem;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		font-size: 1.2rem;
-		text-align: center;
-		outline: none;
-		transition: border 0.2s;
-	}
-
-	input[type='number']:focus {
-		border-color: #4caf50;
-	}
-
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(5, 90px);
-		gap: 8px;
-		margin: 1.5rem 0;
-	}
-
-	.cell {
-		width: 90px;
-		height: 90px;
-		background: #ddd;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 12px;
-		cursor: pointer;
-		font-weight: bold;
-		font-size: 1.3rem;
-		border: 2px solid transparent;
-		transition: all 0.2s ease;
-	}
-
-	.cell:hover {
-		border-color: #888;
-		box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-	}
-
-	.revealed {
-		background: #d4f8d4;
-		color: #2e7d32;
-	}
-
-	.bomb {
-		background: #ff4d4d;
-		color: white;
-	}
-
-	.multiplier {
-		color: #388e3c;
-		font-size: 1rem;
-		font-weight: bold;
-	}
-
-	.controls {
-		display: flex;
-		justify-content: center;
-		margin-top: 1rem;
-		gap: 1rem;
-	}
-
-	.startbutton,
-	.cashout {
-		padding: 1rem 2rem;
-		font-size: 1.2rem;
-		border-radius: 10px;
-		border: none;
-		background: linear-gradient(to right, #a2ff86, #70db70);
-		color: #044d00;
-		font-weight: bold;
-		cursor: pointer;
-		transition: background 0.3s;
-	}
-
-	.startbutton:hover,
-	.cashout:hover {
-		background: linear-gradient(to right, #90ee90, #57c457);
-	}
-
-	/*.startbutton:disabled,
-	 .cashout:disabled {
-		background: #ccc;
-		color: #666;
-		cursor: not-allowed;
-	} */ 
-</style>

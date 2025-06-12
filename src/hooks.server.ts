@@ -1,3 +1,4 @@
-export { handle } from './routes/auth';
+import { auth } from '$lib/server/auth';
+import type { Handle } from '@sveltejs/kit';
 
-console.log('hooks.server.ts');
+export const handle: Handle = auth.handle;

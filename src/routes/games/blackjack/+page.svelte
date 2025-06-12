@@ -153,8 +153,7 @@
 		return `${val}${suit}`;
 	}
 </script>
-
-
+<div class="bg"></div>
 <h1>Blackjack</h1>
 
 <h2>Dealer</h2>
@@ -183,7 +182,10 @@
 
 <h2>Gracz</h2>
 {#each playerHands as hand, i}
-	<div class="hand {i === currentHandIndex ? 'active' : ''} {results[i]}" style="width: fit-content;">
+	<div
+		class="hand {i === currentHandIndex ? 'active' : ''} {results[i]}"
+		style="width: fit-content;"
+	>
 		<div class="cards">
 			{#each hand as card}
 				<div class="card-container" in:fly={{ y: 40, duration: 300 }}>
@@ -215,13 +217,21 @@
 		color: #222;
 		user-select: none;
 	}
+	.bg {
+		background: url('/images/table.jpg') !important;
+		width: 100vw;
+		height: 100vh;
+		z-index: -3;
+		position: fixed;
+	}
 
 	h1,
 	h2 {
 		text-align: center;
 		margin-bottom: 1rem;
 		font-weight: 700;
-		color: #004d99;
+		color: white;
+		font-size: 1.5em;
 	}
 
 	.cards {
@@ -260,7 +270,7 @@
 
 	.hand.active {
 		border-color: #007acc;
-		background-color: #e3f0ff;
+		background-color: rgba(200, 200, 200, 0.5);
 		box-shadow: 0 0 14px 3px rgba(102, 170, 255, 0.4);
 	}
 
@@ -355,11 +365,11 @@
 		background: none;
 		border: none;
 		user-select: none;
-        background: white;
+		background: rgba(0,0,0,0);
 	}
 
 	.flip-front {
-		background-color: #444;
+		background: rgba(0,0,0,0);
 		color: white;
 	}
 
@@ -410,14 +420,14 @@
 			font-size: 0.95rem;
 		}
 	}
-    .pcard-back{
-        width: 120px !important;
+	.pcard-back {
+		width: 120px !important;
 		height: 170px !important;
-    }
-    .flip-front{
-        background: white;
-    }
-    .hand{
-        margin: 30px auto;
-    }
+	}
+	.flip-front {
+		background: rgba(0,0,0,0);
+	}
+	.hand {
+		margin: 30px auto;
+	}
 </style>

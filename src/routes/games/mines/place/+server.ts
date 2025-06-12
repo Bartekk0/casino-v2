@@ -1,8 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-// Przechowuje gry aktywne na serwerze (na produkcji powinno być w bazie danych lub Redisie)
-
 export const activeGames = new Map<string, { bombs: Set<number> }>();
 
 export const POST: RequestHandler = async ({ request }) => {

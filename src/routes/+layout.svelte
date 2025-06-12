@@ -49,11 +49,21 @@
 					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
 				>
 			{:else}
-				<a
-					href="/profile/wallet"
-					class="text-lg transition hover:text-yellow-400"
-					class:text-yellow-400={page.url.pathname === '/profile/wallet'}>WALLET</a
-				>
+				{#if page.data.walletExists}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-yellow-400"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}
+						>{page.data.balance?.toFixed(2)}$</a
+					>
+				{:else}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-red-500"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}>CREATE WALLET</a
+					>
+				{/if}
+
 				<a
 					href="/auth/signout"
 					class="text-lg transition hover:text-yellow-400"

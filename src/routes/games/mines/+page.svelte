@@ -1,17 +1,27 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let gameId: string | null = null;
 	let bombs: number[] = [];
 	let revealed = new Set<number>();
 	let gameOver = true;
 
 	let bombCount = 5;
-	let balance = 100;
+	let balance = 0;
 	let stake = 10;
 	let multiplier = 1;
 	let waitStart = false;
 	let loading = false;
 
 	const individualMultipliers: Record<number, number> = {};
+
+	onMount(async () => {
+		const res = await fetch('/api/portfel/balance');
+		if (res.ok) {
+			const data = await res.json();
+			balance = data.balance;
+		}
+	});
 
 	function factorial(n: number) {
 		if (n < 0) return NaN;
@@ -33,9 +43,9 @@
 		if (s > safeTiles) return 0;
 
 		const rawMultiplier = combination(totalTiles, s) / combination(safeTiles, s);
-
 		const houseEdge = 0.99;
-		return Math.floor(rawMultiplier * houseEdge * 100) / 100;
+		const final = rawMultiplier * houseEdge;
+		return isFinite(final) ? Math.floor(final * 100) / 100 : 0;
 	}
 
 	async function startGame() {
@@ -59,28 +69,31 @@
 		}
 
 		gameId = data.gameId;
+		balance = data.balance ?? balance;  // <-- ustawiam balans z odpowiedzi
 		revealed = new Set();
 		bombs = [];
 		gameOver = false;
 		multiplier = 1;
-		balance -= stake;
 		for (const key in individualMultipliers) delete individualMultipliers[key];
 	}
 
 	async function clickCell(i: number) {
 		if (!gameId || gameOver || revealed.has(i)) return;
 		loading = true;
+
 		const res = await fetch('/games/mines', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ action: 'click', gameId, tile: i })
 		});
+
 		loading = false;
 		const data = await res.json();
 		if (!res.ok) {
 			alert(data.error);
 			return;
 		}
+
 		if (data.hit) {
 			gameOver = true;
 			bombs = data.bombs;
@@ -101,20 +114,24 @@
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ action: 'cashout', gameId })
 		});
+
 		loading = false;
 		const data = await res.json();
 		if (!res.ok) {
 			alert(data.error);
 			return;
 		}
+
 		gameOver = true;
 		bombs = data.bombs;
-		balance += stake * multiplier;
+		balance = data.balance ?? balance;
 	}
 </script>
 
-<div class={loading ? 'pointer-events-none' : ''}>
+
+<div class={loading ? 'pointer-events-none cursor-wait' : ''}>
 	<p class="mb-4 text-2xl font-bold">Balance: {balance.toFixed(2)}</p>
+
 	<div class="mb-4 flex justify-center gap-8">
 		<div class="flex flex-col items-center">
 			<span class="mb-2 text-base font-semibold">Bombs</span>
@@ -124,9 +141,10 @@
 				min="1"
 				max="24"
 				disabled={!gameOver || loading}
-				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base transition outline-none focus:border-yellow-500"
+				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base outline-none focus:border-yellow-500"
 			/>
 		</div>
+
 		<div class="flex flex-col items-center">
 			<span class="mb-2 text-base font-semibold">Stake</span>
 			<input
@@ -135,7 +153,7 @@
 				min="1"
 				max={balance}
 				disabled={!gameOver || loading}
-				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base transition outline-none focus:border-yellow-500"
+				class="w-24 rounded-lg border border-gray-300 px-3 py-2 text-center text-base outline-none focus:border-yellow-500"
 			/>
 		</div>
 	</div>

@@ -8,5 +8,8 @@ export default defineConfig({
 		alias: {
 			$lib: '/src/lib'
 		}
+	},
+	server: {
+		allowedHosts: ['idontcare.ovh', 'funlab.dedyn.io']
 	}
 });

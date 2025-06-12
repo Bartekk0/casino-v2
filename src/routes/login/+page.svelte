@@ -45,7 +45,7 @@
 		</button>
 	{/if}
 	{#if submitted}
-		<div class="mb-4 rounded-full bg-transparent p-4 text-center text-white">Logining in...</div>
+		<div class="mb-4 rounded-full bg-transparent p-4 text-center text-white">Logging in...</div>
 	{:else if step === 1}
 		<form class="space-y-6" on:submit|preventDefault={handleEmailSubmit}>
 			{#if error}

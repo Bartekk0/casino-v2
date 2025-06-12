@@ -3,7 +3,9 @@
 	"compilerOptions": {
 		"baseUrl": "./",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/*"],
+			"$lib/*": ["src/lib/*"],
+			"$utils/*": ["src/utils/*"]
 		},
 		"allowJs": true,
 		"checkJs": true,
@@ -15,7 +17,6 @@
 		"strict": true,
 		"moduleResolution": "bundler"
 	}
-
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
 	//

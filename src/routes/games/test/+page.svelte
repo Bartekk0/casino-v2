@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-
+   export let data: { balance: number };
   let chance = 50; // szansa na wygraną (%)
   let rollAbove = true; // higher = true, lower = false
   let stake = 10.00; // kwota w złotych
-  let balance = 100.00; // saldo początkowe
+  let balance = data.balance ?? 0;
   let multiplier = 0;
   let roll = 0;
   let win = false;

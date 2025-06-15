@@ -9,12 +9,7 @@
 	<title>Casino</title>
 </svelte:head>
 
-<div
-	class="h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat text-white select-none"
-	style="
-			background-image: url('/main_page/bg.jpg');
-		"
->
+<div class="relative h-full min-h-screen w-full overflow-auto text-white select-none">
 	<nav
 		class="absolute top-0 right-0 left-0 z-10 container mx-auto flex items-center justify-between p-6"
 	>
@@ -54,11 +49,21 @@
 					class:text-yellow-400={page.url.pathname === '/register'}>REGISTER</a
 				>
 			{:else}
-				<a
-					href="/profile/wallet"
-					class="text-lg transition hover:text-yellow-400"
-					class:text-yellow-400={page.url.pathname === '/profile/wallet'}>WALLET</a
-				>
+				{#if page.data.walletExists}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-yellow-400"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}
+						>{page.data.balance?.toFixed(2)}$</a
+					>
+				{:else}
+					<a
+						href="/profile/wallet"
+						class="text-lg transition hover:text-red-500"
+						class:text-yellow-400={page.url.pathname === '/profile/wallet'}>CREATE WALLET</a
+					>
+				{/if}
+
 				<a
 					href="/auth/signout"
 					class="text-lg transition hover:text-yellow-400"
@@ -82,3 +87,10 @@
 		{@render children()}
 	</main>
 </div>
+
+<style>
+	:global(body) {
+		@apply h-full min-h-screen w-full bg-cover bg-fixed bg-center bg-no-repeat;
+		background-image: url('/main_page/bg.jpg');
+	}
+</style>
